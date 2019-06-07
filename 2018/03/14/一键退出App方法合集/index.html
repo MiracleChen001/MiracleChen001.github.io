@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>一键退出App方法合集 | Miracle Chen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一键退出App相信是很多Android开发者都需要去实现的需求，但到底该如何干净利索地实现它呢？来吧，撸一个试试。">
+<meta name="keywords" content="退出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一键退出App方法合集">
+<meta property="og:url" content="http://MiraleChen001.github.io/2018/03/14/一键退出App方法合集/index.html">
+<meta property="og:site_name" content="Miracle Chen">
+<meta property="og:description" content="一键退出App相信是很多Android开发者都需要去实现的需求，但到底该如何干净利索地实现它呢？来吧，撸一个试试。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-22T10:53:13.674Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一键退出App方法合集">
+<meta name="twitter:description" content="一键退出App相信是很多Android开发者都需要去实现的需求，但到底该如何干净利索地实现它呢？来吧，撸一个试试。">
+  
+    <link rel="alternate" href="/atom.xml" title="Miracle Chen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Miracle Chen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">拿来长岛冰茶，换我半夜安睡</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://MiraleChen001.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-一键退出App方法合集" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/14/一键退出App方法合集/" class="article-date">
+  <time datetime="2018-03-14T12:11:11.000Z" itemprop="datePublished">2018-03-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android-实战/">Android 实战</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      一键退出App方法合集
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一键退出App相信是很多Android开发者都需要去实现的需求，但到底该如何干净利索地实现它呢？来吧，撸一个试试。</p>
+<a id="more"></a>
+
+<p>首先需要明确的一点是，完全退出App本质来讲分为两个部分。</p>
+<ol>
+<li><p>关闭该App所有的Activity。</p>
+</li>
+<li><p>结束该App的进程。</p>
+</li>
+</ol>
+<p>接下来我们就分别实现这两个部分。</p>
+<h2 id="关闭所有Activity"><a href="#关闭所有Activity" class="headerlink" title="关闭所有Activity"></a>关闭所有Activity</h2><p>第一步，我们需要关闭所有的Activity。</p>
+<h3 id="1-Activity启动模式"><a href="#1-Activity启动模式" class="headerlink" title="1.Activity启动模式"></a>1.Activity启动模式</h3><p>在<a href="https://miraclechen001.github.io/2018/03/11/Activity%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F%E8%AF%A6%E8%A7%A3/" target="_blank" rel="noopener">Activity启动模式详解</a>中，我们详细讲解了Activity的启动模式，还不熟悉的小伙伴可以先看一下这篇文章。</p>
+<p>首先我们把App的入口Activity采用SingleTask启动模式，或者加上标记Intent.FLAG_ACTIVITY_CLEAR_TOP。</p>
+<p>当需要退出App时，直接启动App入口的Activity。因为该Acitivity是SingleTask模式，所以系统会帮助我们将该Activity上面的其他Activity全部关闭移除，并把该Activity放置在栈顶。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">private void exitApp() &#123;</span><br><span class="line">    Intent intent = new Intent(context, MainActivity.class);</span><br><span class="line">    intent.putExtra(&quot;exitApp&quot;, true);</span><br><span class="line">    context.startActivity(intent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着系统会调用该Activity的onNewIntent()方法，所以我们再在这个方法里判断是否有退出App的标识，如果有则关闭自身。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onNewIntent(Intent intent) &#123;</span><br><span class="line">    super.onNewIntent(intent);</span><br><span class="line">    if (intent != null) &#123;</span><br><span class="line">        // 判断是否退出App的标识</span><br><span class="line">        boolean isExitApp = intent.getBooleanExtra(&quot;exitApp&quot;, false);</span><br><span class="line">        if (isExitApp) &#123;</span><br><span class="line">            // 关闭自身</span><br><span class="line">            this.finish();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种方法使用简单便捷。但是必须要规定App入口的Activity采用SingleTask模式，而且如果App里有多任务栈（SingleInstance模式启动），就无能为力了。</p>
+<h3 id="2-系统任务栈"><a href="#2-系统任务栈" class="headerlink" title="2.系统任务栈"></a>2.系统任务栈</h3><p>我们可以同过ActivityManager获取当前系统的任务栈，然后把栈内的所有Activity逐个关闭。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@TargetApi(Build.VERSION_CODES.LOLLIPOP)</span><br><span class="line"></span><br><span class="line">// 1. 获取ActivityManager</span><br><span class="line">ActivityManager activityManager = (ActivityManager) context.getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);</span><br><span class="line"></span><br><span class="line">// 2. 获取任务栈</span><br><span class="line">List&lt;ActivityManager.AppTask&gt; appTaskList = activityManager.getAppTasks();</span><br><span class="line"></span><br><span class="line">// 3. 逐个关闭Activity</span><br><span class="line">for (ActivityManager.AppTask appTask : appTaskList) &#123;</span><br><span class="line">    appTask.finishAndRemoveTask();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种方法使用简单便捷。但是只能在<strong>Android 5.0</strong>以上使用，而且同样，对多任务栈（SingleInstance模式启动）无能为力。</p>
+<h3 id="3-BroadcastReceiver"><a href="#3-BroadcastReceiver" class="headerlink" title="3.BroadcastReceiver"></a>3.BroadcastReceiver</h3><p>我们也可以通过广播监听的方式来实现关闭所有Activity。</p>
+<p>首先自定义一个广播接收器，专门用来关闭Activity。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class ExitAppReceiver extends BroadcastReceiver &#123;</span><br><span class="line">    private Activity activity;</span><br><span class="line"></span><br><span class="line">    public ExitAppReceiver(Activity activity)&#123;</span><br><span class="line">        this.activity = activity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onReceive(Context context, Intent intent) &#123;</span><br><span class="line">        activity.finish();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在每个Activity里注册广播接收器，这里也可以用一个BaseActivity来实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class BaseActivity extends Activity &#123;</span><br><span class="line"></span><br><span class="line">private  ExitAppReceiver mExitAppReceiver；</span><br><span class="line"></span><br><span class="line">// 在onCreate（）中注册广播接收器</span><br><span class="line">protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">    super.onCreate(savedInstanceState);</span><br><span class="line">    mExitAppReceiver = new ExitAppReceiver(this);</span><br><span class="line">    registerReceiver(mExitAppReceiver,new IntentFilter(&quot;com.chen.exit&quot;));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 在onDestroy（）中注销广播接收器</span><br><span class="line">protected void onDestroy() &#123;</span><br><span class="line">    super.onDestroy();</span><br><span class="line">    unregisterReceiver(mExitAppReceive);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后在需要退出App时，发送广播。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">context.sendBroadcast(new Intent(&quot;com.chen.exit&quot;));</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意的是，该方法只能实现用户角度上的一键退出。即只能退出所有Activity，但无法再接着下面的退出整个App进程的操作。因为发送广播后，并不能保证在第一时间接收到广播，所以不能直接在发送后关闭整个进程。</p>
+<p>这种方法可以实现多任务栈情况下的一键退出，但需要在每个Activity里注册广播接收器。最关键的是，它无法做到最终终止App进程。</p>
+<h3 id="4-重写Application"><a href="#4-重写Application" class="headerlink" title="4.重写Application"></a>4.重写Application</h3><p>我们可以在Manifest里配置自定义的Application子类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;application</span><br><span class="line">	...</span><br><span class="line">    android:name=&quot;.MyApplication&quot;</span><br><span class="line">&lt;/application&gt;</span><br></pre></td></tr></table></figure>
+
+<p>接着在MyApplication里建立一个Activity的链表结构，来保存正在运行的Activity实例。当需要一键退出时，把链表里的所有Activity实例逐个退出即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">public class MyApplicaiton extends Application &#123;</span><br><span class="line"></span><br><span class="line">    // 采用LinkedList，增删速度快</span><br><span class="line">    public static LinkedList&lt;Activity&gt; activityLinkedList;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        super.onCreate();</span><br><span class="line"></span><br><span class="line">        activityLinkedList = new LinkedList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onActivityCreated(Activity activity, Bundle savedInstanceState) &#123;</span><br><span class="line">                // 在Activity onCreate()时，保存Activity实例到链表</span><br><span class="line">                activityLinkedList.add(activity);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onActivityDestroyed(Activity activity) &#123;</span><br><span class="line">                // 在Activity onDestroyed()时，移除Activity实例</span><br><span class="line">                activityLinkedList.remove(activity);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onActivityStarted(Activity activity) &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onActivityResumed(Activity activity) &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onActivityPaused(Activity activity) &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onActivityStopped(Activity activity) &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onActivitySaveInstanceState(Activity activity, Bundle outState) &#123;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void exitApp() &#123;</span><br><span class="line">        // 逐个退出Activity</span><br><span class="line">        for (Activity activity : activityLinkedList) &#123;</span><br><span class="line">            activity.finish();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着调用一键退出方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">private MyApplicaiton app;</span><br><span class="line"></span><br><span class="line">app = (MyApplicaiton) getApplication();</span><br><span class="line">app.exitApp();</span><br></pre></td></tr></table></figure>
+
+<p>该方法同样可以实现多任务栈情况下的一键退出，但它需要Activity经历正常的生命周期，即创建时调用onCreate()，结束时调用onDestroy()。</p>
+<h3 id="5-EventBus或者RxBus"><a href="#5-EventBus或者RxBus" class="headerlink" title="5.EventBus或者RxBus"></a>5.EventBus或者RxBus</h3><p>我们也可以借助EventBus或者RxBus来实现这个功能，这里以RxBus为例。</p>
+<p>首先，在每个Activity的onCreate()方法里注册RxBus，并判断响应动作是否为退出App，如果是则关闭自己。这里要记得要在onDestroy()方法里取消订阅。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class BaseActivity extends Activity &#123;</span><br><span class="line">  private Disposable disposable;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        // 注册RxBus</span><br><span class="line">        disposable = RxBus.getInstance().toObservable(String.class)</span><br><span class="line">                .subscribe(new Consumer&lt;String&gt;() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void accept(String s) throws Exception &#123;</span><br><span class="line">                        // 判断响应动作</span><br><span class="line">                        if (s.equals(&quot;exitApp&quot;))&#123;</span><br><span class="line">                            finish();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">// 取消订阅</span><br><span class="line"> @Override</span><br><span class="line">protected void onDestroy() &#123;</span><br><span class="line">    if (!disposable.isDisposed())&#123;</span><br><span class="line">          disposable.dispose();;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着在需要退出App时，发送退出事件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RxBus.getInstance().post(&quot;exitApp&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>如果项目里已经接入有EventBus或RxBus，可以用该方法简单便捷地实现这个功能。当然，如果项目里没有接入，不建议为该功能特地接入。</p>
+<h2 id="结束App进程"><a href="#结束App进程" class="headerlink" title="结束App进程"></a>结束App进程</h2><p>上面介绍的方法仅仅是用户层面的一键退出，我们应该在所有Activity关闭后，紧接着再结束整个App的进程，实现真正的一键退出。</p>
+<p>当然，上面说到了，如果使用BroadcastReceiver方法来关闭所有Activity，就无法再加接下来这一步了。</p>
+<p>这里实现方法有两种，不过都非常简单,选择其中任意一种即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//1.killProcess()</span><br><span class="line">android.os.Process.killProcess(android.os.Process.myPid()) ；</span><br><span class="line"></span><br><span class="line">//2.System.exit()</span><br><span class="line">System.exit(0);</span><br></pre></td></tr></table></figure>
+
+<p>这里你可能有个疑问，既然这里可以直接关闭App进程，那为什么还要第一步关闭所有Activity呢？</p>
+<p>那我们就做一个实验，先逐个启动ActivityA，ActivityB和ActivityC，接着在ActivityC里调用结束App进程的方法。</p>
+<p>我们会发现进程先结束了，接着又重新开启，启动ActivityA和ActivityB。</p>
+<p>因为Android中的ActivityManager会时刻监听着进程，如果发现进程被非正常结束，它会去尝试重启这个进程。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，一键退出App的所有方法你都应该掌握啦。在项目里根据实际情况，选择最适合的那一种吧。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://MiraleChen001.github.io/2018/03/14/一键退出App方法合集/" data-id="cjwlstn5m0018t0vjg8kyak0l" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/退出/">退出</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/18/谈谈Android中的线程池/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          关于Android中的线程池
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/11/Activity启动模式详解/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Activity启动模式详解</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android-基础/">Android 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android-实战/">Android 实战</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/博客搭建/">博客搭建</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/多线程/">多线程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/事件拦截/">事件拦截</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/六大原则/">六大原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/加密/">加密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单例模式/">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摇晃截图/">摇晃截图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/退出/">退出</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/邮件/">邮件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/事件拦截/" style="font-size: 10px;">事件拦截</a> <a href="/tags/六大原则/" style="font-size: 10px;">六大原则</a> <a href="/tags/加密/" style="font-size: 10px;">加密</a> <a href="/tags/单例模式/" style="font-size: 10px;">单例模式</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 20px;">抽象工厂模式</a> <a href="/tags/摇晃截图/" style="font-size: 10px;">摇晃截图</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/退出/" style="font-size: 10px;">退出</a> <a href="/tags/邮件/" style="font-size: 10px;">邮件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/29/Android实现手机摇晃截图/">Android实现手机摇晃截图</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/26/在Android项目中集成发送邮件功能/">在Android项目中集成发送邮件功能</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/23/设计模式系列（五）：建造者模式/">设计模式系列（五）：建造者模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（四）：模板方法模式/">设计模式系列（四）：模板方法模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（三）：抽象工厂模式/">设计模式系列（三）：抽象工厂模式</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

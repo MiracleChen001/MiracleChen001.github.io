@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>关于Android中的线程池 | Miracle Chen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="从概念到实现，再从应用到原理。关于线程池，你所应该知道的一切。">
+<meta name="keywords" content="线程池">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于Android中的线程池">
+<meta property="og:url" content="http://MiraleChen001.github.io/2018/03/18/谈谈Android中的线程池/index.html">
+<meta property="og:site_name" content="Miracle Chen">
+<meta property="og:description" content="从概念到实现，再从应用到原理。关于线程池，你所应该知道的一切。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/thread_pool/execution_process.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+<meta property="og:updated_time" content="2018-03-25T08:43:38.419Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于Android中的线程池">
+<meta name="twitter:description" content="从概念到实现，再从应用到原理。关于线程池，你所应该知道的一切。">
+<meta name="twitter:image" content="http://opzh3oodr.bkt.clouddn.com/thread_pool/execution_process.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+  
+    <link rel="alternate" href="/atom.xml" title="Miracle Chen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Miracle Chen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">拿来长岛冰茶，换我半夜安睡</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://MiraleChen001.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-谈谈Android中的线程池" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/18/谈谈Android中的线程池/" class="article-date">
+  <time datetime="2018-03-18T11:42:19.000Z" itemprop="datePublished">2018-03-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/多线程/">多线程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于Android中的线程池
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>从概念到实现，再从应用到原理。关于线程池，你所应该知道的一切。</p>
+<a id="more"></a>
+
+<h2 id="线程池简介"><a href="#线程池简介" class="headerlink" title="线程池简介"></a>线程池简介</h2><p>在操作系统中，线程时操作系统调度的最小单元。同时线程又是一种受限的系统资源，什么意思呢？就是说线程不可能无限制的产生，并且线程的创建和销毁的过程都会产生相应的开销。</p>
+<p>当系统中存在大量的线程时，系统会通过时间片轮转的方式调度每个线程。因此线程不可能做到绝对的并行，除非线程数小于等于CPU的核心数，一般这是不太可能的。</p>
+<p>如果我们在一个进程中，频繁地创建和销毁线程，显然不是一个高效的做法。线程池就是为了解决这一问题，应运而生。</p>
+<p>线程池简单来说，就是一个缓存了一定数量线程的区域。</p>
+<p>它的优点可以大致归纳为以下三点。</p>
+<ol>
+<li><p>重用线程池中的线程，避免因为线程的创建和销毁所带来的性能开销。</p>
+</li>
+<li><p>能有效地控制线程的最大并发数，避免大量的线程因为互相抢占资源而导致的阻塞现象。</p>
+</li>
+<li><p>能够对线程进行简单的管理，并提供定时执行以及指定时间间隔循环执行等功能。</p>
+</li>
+</ol>
+<h2 id="线程池的实现"><a href="#线程池的实现" class="headerlink" title="线程池的实现"></a>线程池的实现</h2><p>Android中的线程池的概念，来源于Java中的Executor。Executor是一个接口，它的真正实现类是ThreadPoolExecutor，ThreadPoolExecutor的构造方法提供了一系列的参数来配置线程池。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public ThreadPoolExecutor (int corePoolSize,</span><br><span class="line">                           int maximumPoolSize,</span><br><span class="line">                           long keepAliveTime,</span><br><span class="line">                           TimeUnit unit,</span><br><span class="line">                           BlockingQueue&lt;Runnable&gt; workQueue,</span><br><span class="line">                           ThreadFactory threadFactory)</span><br></pre></td></tr></table></figure>
+
+<p>接下来，对这些参数逐一做简单的解释。</p>
+<h3 id="核心线程数（corePoolSize）"><a href="#核心线程数（corePoolSize）" class="headerlink" title="核心线程数（corePoolSize）"></a>核心线程数（corePoolSize）</h3><p>默认情况下，核心线程会在线程池中一直存活，即便它们属于闲置状态。</p>
+<p>如果我们改变ThreadPoolExecutor的allowCoreThreadTimeOut属性，将其设置为true，那么核心线程在闲置时会有超时策略。当闲置核心线程的等待新任务时间超过某个时长后，核心线程就会被终止。这个时长由keepAliveTime指定。</p>
+<h3 id="最大线程数（maximumPoolSize）"><a href="#最大线程数（maximumPoolSize）" class="headerlink" title="最大线程数（maximumPoolSize）"></a>最大线程数（maximumPoolSize）</h3><p>当线程池的活动线程数达到最大线程数后，后续新的任务将会被阻塞。</p>
+<h3 id="超时时长（keepAliveTime）"><a href="#超时时长（keepAliveTime）" class="headerlink" title="超时时长（keepAliveTime）"></a>超时时长（keepAliveTime）</h3><p>非核心线程如果闲置时长超过这个超时时长，非核心线程就会被回收。</p>
+<p>上面提到过，如果将ThreadPoolExecutor的allowCoreThreadTimeOut属性设置为true，核心线程同样也会被这个超时时长支配。</p>
+<h3 id="时间单位（unit）"><a href="#时间单位（unit）" class="headerlink" title="时间单位（unit）"></a>时间单位（unit）</h3><p>这是超时时长参数的时间单位，为一个枚举。常见的有TimeUnit.MILLISECONDS、TimeUnit.SECONDS、TimeUnit.MINUTES等。</p>
+<h3 id="任务队列（workQueue）"><a href="#任务队列（workQueue）" class="headerlink" title="任务队列（workQueue）"></a>任务队列（workQueue）</h3><p>通过线程池的execute方法提交的Runnable对象会储存在任务队列这个参数中。</p>
+<h3 id="线程工厂（threadFactory）"><a href="#线程工厂（threadFactory）" class="headerlink" title="线程工厂（threadFactory）"></a>线程工厂（threadFactory）</h3><p>线程工厂为线程池提供创建新线程的功能。ThreadFactory是一个接口，它只有一个实现方法：Thread newThread(Runnable r)。</p>
+<h2 id="线程池的运行"><a href="#线程池的运行" class="headerlink" title="线程池的运行"></a>线程池的运行</h2><p>ThreadPoolExecutor在执行任务时会大致遵循以下的规则。</p>
+<ol>
+<li><p>如果线程池中的线程数量没有达到核心线程的数量，会直接创建一个核心线程来执行任务。</p>
+</li>
+<li><p>如果线程池中的线程数量已经达到或者超过核心线程的数量，那么任务会被插入到任务队列中排队等待执行。</p>
+</li>
+<li><p>如果任务队列已满，将无法再继续插入。这时如果线程数量如果没有达到线程池规定的最大值，则立刻启动一个非核心线程来执行任务。</p>
+</li>
+<li><p>如果任务队列已满，而且线程数量已达到线程池规定的最大值，那么就拒绝执行此任务。ThreadPoolExecutor会调用RejectedExecutionHandler的rejectedExecution方法来通知调用者。</p>
+</li>
+</ol>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/thread_pool/execution_process.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="线程池的运行流程"></p>
+<h2 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h2><p>线程池的用法如下。</p>
+<h3 id="创建线程池"><a href="#创建线程池" class="headerlink" title="创建线程池"></a>创建线程池</h3><p>创建时，通过配置线程池的参数，从而实现自己所需内存。下面以AsyncTask中的线程池为例。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">private static final int CPU_COUNT = Runtime.getRuntime().availableProcess();</span><br><span class="line">private static final int CORE_POOL_SIZE = CPU_COUNT + 1;</span><br><span class="line">private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;</span><br><span class="line">private static final int KEEP_ALIVE = 1;</span><br><span class="line"></span><br><span class="line">private static final ThreadFactory sThreadFactory = new ThreadFactory() &#123;</span><br><span class="line">	private final AtomicInteger mCount = new AtomicInteger(1);</span><br><span class="line">	public Thread(Runnable r) &#123;</span><br><span class="line">		return new Thread(r, &quot;AsyncTask #&quot; + mCount.getAndIncrement());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static final BlockingQueue&lt;Runnable&gt; sPoolWorkQueue = </span><br><span class="line">	new LinkedBlockingQueue&lt;Runnable&gt; (128);</span><br><span class="line"></span><br><span class="line">public static final Executor threadPool = new ThreadPoolExecutor(CORE_POOL_SIZE,</span><br><span class="line">                                             MAXIMUM_POOL_SIZE,</span><br><span class="line">                                             KEEP_ALIVE,</span><br><span class="line">                                             TimeUnit.SECONDS,</span><br><span class="line">                                             sPoolWorkQueue,</span><br><span class="line">                                             sThreadFactory);</span><br></pre></td></tr></table></figure>
+
+<p>我们可以很明显的看出线程池的配置规格。</p>
+<ol>
+<li><p>核心线程数为 CPU核心数+1。</p>
+</li>
+<li><p>最大线程数为 CPU核心数的2倍+1。</p>
+</li>
+<li><p>超时时长为 1秒。</p>
+</li>
+<li><p>任务队列的容量为 128。</p>
+</li>
+</ol>
+<h3 id="提交任务"><a href="#提交任务" class="headerlink" title="提交任务"></a>提交任务</h3><p>通过execute()方法，传入Runnable对象，向线程池提交任务。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">threadPool.execute(new Runnable() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">    	// 线程执行任务</span><br><span class="line">        ... </span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="关闭线程池"><a href="#关闭线程池" class="headerlink" title="关闭线程池"></a>关闭线程池</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">threadPool.shutdown();</span><br><span class="line">//threadPool.shutdownNow()</span><br></pre></td></tr></table></figure>
+
+<p>此时，会遍历线程池中的所有工作线程，然后逐个调用线程的interrupt()方法中断线程。</p>
+<p>shutdown(): 设置线程池的状态为SHUTDOWN，然后中断所有没有正在执行任务的线程。</p>
+<p>shutdownNow(): 设置线程池的状态为STOP，然后中断所有没有正在执行任务或暂停任务的线程。并返回等待任务的列表。</p>
+<p>一般多以shutdown()关闭线程池。如果任务不一定要执行完，则以shutdownNow()关闭线程池。</p>
+<h2 id="常见线程池"><a href="#常见线程池" class="headerlink" title="常见线程池"></a>常见线程池</h2><p>Android中有四种最常见的线程池，它们都是通过配置好核心参数，来实现自己的功能特性。</p>
+<h3 id="定长线程池"><a href="#定长线程池" class="headerlink" title="定长线程池"></a>定长线程池</h3><p>定长线程池通过Executors.newFixedThreadPool()创建。</p>
+<p>它的特性如下。</p>
+<ol>
+<li>线程数量固定。</li>
+<li>只有核心线程且无超时机制（不会被回收）。</li>
+<li>任务队列无大小限制。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 创建定长线程池并设置核心线程数量为5</span><br><span class="line">ExecutorService fixedThreadPool = Executors.newFixedThreadPool(5);</span><br><span class="line"></span><br><span class="line">// 创建好需执行的线程对象</span><br><span class="line">Runnable task =new Runnable() &#123;</span><br><span class="line">	public void run() &#123;</span><br><span class="line">    	System.out.println(&quot;run run run!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">        </span><br><span class="line">// 提交任务</span><br><span class="line">fixedThreadPool.execute(task);</span><br><span class="line">        </span><br><span class="line">// 关闭线程池</span><br><span class="line">fixedThreadPool.shutdown();</span><br></pre></td></tr></table></figure>
+
+<p>它的特性意味着它能够更快速的响应外界的请求。我们可以通过它控制线程的最大并发数。</p>
+<h3 id="可缓存线程池"><a href="#可缓存线程池" class="headerlink" title="可缓存线程池"></a>可缓存线程池</h3><p>可缓存线程池通过Executors.newCachedThreadPool()创建。</p>
+<p>它的特性如下。</p>
+<ol>
+<li>只有非核心线程。</li>
+<li>非核心线程数量无限制。</li>
+<li>超时时长为60秒。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 创建可缓存线程池</span><br><span class="line">ExecutorService cachedThreadPool = Executors.newCachedThreadPool();</span><br><span class="line"></span><br><span class="line">// 创建好需执行的线程对象</span><br><span class="line">Runnable task =new Runnable() &#123;</span><br><span class="line">	public void run() &#123;</span><br><span class="line">    	System.out.println(&quot;run run run!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">        </span><br><span class="line">// 提交任务</span><br><span class="line">cachedThreadPool.execute(task);</span><br><span class="line">        </span><br><span class="line">// 关闭线程池</span><br><span class="line">fixedThreadPool.shutdown();</span><br></pre></td></tr></table></figure>
+
+<p>它的特性意味着任何任务到来都会立刻执行，不需要等待。比较适合执行大量的耗时少的任务。</p>
+<h3 id="定时线程池"><a href="#定时线程池" class="headerlink" title="定时线程池"></a>定时线程池</h3><p>定时线程池通过Executors.newScheduledThreadPool()创建。</p>
+<p>它的特性如下。</p>
+<ol>
+<li>核心线程数量固定。</li>
+<li>非核心线程数量无限制。</li>
+<li>超时时长为0，非核心线程闲置马上回收。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 创建定时线程池并设置核心线程数量为5</span><br><span class="line">ExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(5);</span><br><span class="line"></span><br><span class="line">// 创建好需执行的线程对象</span><br><span class="line">Runnable task =new Runnable() &#123;</span><br><span class="line">	public void run() &#123;</span><br><span class="line">    	System.out.println(&quot;run run run!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">        </span><br><span class="line">// 提交任务</span><br><span class="line"></span><br><span class="line">// 延迟1s后执行</span><br><span class="line">scheduledThreadPool.schedule(task, 1, TimeUnit.SECONDS); </span><br><span class="line">// 延迟1000ms后每隔3000ms执行</span><br><span class="line">scheduledThreadPool.scheduleAtFixedRate(task, 1000, 3000, TimeUnit.MILLISECONDS);</span><br><span class="line">        </span><br><span class="line">// 关闭线程池</span><br><span class="line">scheduledThreadPool.shutdown();</span><br></pre></td></tr></table></figure>
+
+<p>它主要用于执行定时任务和具有固定周期的任务。</p>
+<h3 id="单线程化线程池"><a href="#单线程化线程池" class="headerlink" title="单线程化线程池"></a>单线程化线程池</h3><p>单线程化线程池通过Executors.newSingleThreadExecutor()创建。</p>
+<p>它的特性如下。</p>
+<ol>
+<li>只有一个核心线程。</li>
+<li>确保所有任务都在一个线程中按顺序执行。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 创建单线程化线程池</span><br><span class="line">ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();</span><br><span class="line"></span><br><span class="line">// 创建好需执行的线程对象</span><br><span class="line">Runnable task =new Runnable() &#123;</span><br><span class="line">	public void run() &#123;</span><br><span class="line">    	System.out.println(&quot;run run run!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">        </span><br><span class="line">// 提交任务</span><br><span class="line">singleThreadExecutor.execute(task);</span><br><span class="line">        </span><br><span class="line">// 关闭线程池</span><br><span class="line">singleThreadExecutor.shutdown();</span><br></pre></td></tr></table></figure>
+
+<p>它能够统一所有的外界任务到一个线程中，使这些任务之间不需要处理线程同步的问题。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>好了，认真读完本文后，你已经对线程池的概念和用法了如指掌。接下来，就是根据项目需求，灵活地运用它们吧！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://MiraleChen001.github.io/2018/03/18/谈谈Android中的线程池/" data-id="cjwlstn60001wt0vjh3bftekc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程池/">线程池</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/27/Java多线程必知概念/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Java多线程必知概念
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/14/一键退出App方法合集/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">一键退出App方法合集</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android-基础/">Android 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android-实战/">Android 实战</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/博客搭建/">博客搭建</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/多线程/">多线程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/事件拦截/">事件拦截</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/六大原则/">六大原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/加密/">加密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单例模式/">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摇晃截图/">摇晃截图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/退出/">退出</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/邮件/">邮件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/事件拦截/" style="font-size: 10px;">事件拦截</a> <a href="/tags/六大原则/" style="font-size: 10px;">六大原则</a> <a href="/tags/加密/" style="font-size: 10px;">加密</a> <a href="/tags/单例模式/" style="font-size: 10px;">单例模式</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 20px;">抽象工厂模式</a> <a href="/tags/摇晃截图/" style="font-size: 10px;">摇晃截图</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/退出/" style="font-size: 10px;">退出</a> <a href="/tags/邮件/" style="font-size: 10px;">邮件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/29/Android实现手机摇晃截图/">Android实现手机摇晃截图</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/26/在Android项目中集成发送邮件功能/">在Android项目中集成发送邮件功能</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/23/设计模式系列（五）：建造者模式/">设计模式系列（五）：建造者模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（四）：模板方法模式/">设计模式系列（四）：模板方法模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（三）：抽象工厂模式/">设计模式系列（三）：抽象工厂模式</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

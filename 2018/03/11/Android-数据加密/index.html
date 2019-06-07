@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Android 数据加密 | Miracle Chen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在Android开发中，客户端与服务器进行数据交互时，无可避免的会涉及到诸如用户信息、密码等敏感信息。因此，对重要数据的加密就显得非常重要。">
+<meta name="keywords" content="加密">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 数据加密">
+<meta property="og:url" content="http://MiraleChen001.github.io/2018/03/11/Android-数据加密/index.html">
+<meta property="og:site_name" content="Miracle Chen">
+<meta property="og:description" content="在Android开发中，客户端与服务器进行数据交互时，无可避免的会涉及到诸如用户信息、密码等敏感信息。因此，对重要数据的加密就显得非常重要。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-11T07:10:42.552Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 数据加密">
+<meta name="twitter:description" content="在Android开发中，客户端与服务器进行数据交互时，无可避免的会涉及到诸如用户信息、密码等敏感信息。因此，对重要数据的加密就显得非常重要。">
+  
+    <link rel="alternate" href="/atom.xml" title="Miracle Chen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Miracle Chen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">拿来长岛冰茶，换我半夜安睡</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://MiraleChen001.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Android-数据加密" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/11/Android-数据加密/" class="article-date">
+  <time datetime="2018-03-11T07:09:22.000Z" itemprop="datePublished">2018-03-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android-基础/">Android 基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android 数据加密
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在Android开发中，客户端与服务器进行数据交互时，无可避免的会涉及到诸如用户信息、密码等敏感信息。因此，对重要数据的加密就显得非常重要。</p>
+<a id="more"></a>
+
+<h2 id="常用加密方式"><a href="#常用加密方式" class="headerlink" title="常用加密方式"></a>常用加密方式</h2><h3 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h3><p>MD5是一种被广泛使用的密码散列函数。可以将不定长度的信息，加密成固定长度的散列值（128位，一般表示为32位十六进制数字）。</p>
+<p>MD5是<strong>不可逆的加密算法</strong>，常用于只需加密无需解密的数据上，比如用户密码。也常用来保证数据的完整性，因为数据更改后，其加密的MD5也会随着改变，对比前后的MD5值可确定数据是否完整或被更改。</p>
+<p>MD5已经被证实无法防止碰撞，可以被加以破解。可以通过多次加密、加盐的方式增大破解难度。但对于高度安全性的数据，一般建议改用其他算法，比如SHA-2、SHA-3。因其稳定快速的特点，MD5仍广泛应用于普通数据的错误检查领域。</p>
+<h3 id="RSA"><a href="#RSA" class="headerlink" title="RSA"></a>RSA</h3><p>RSA加密算法是以算法的三位发明者名字首字母命名，是一种<strong>非对称加密算法</strong>。到目前为止，世界上还没有任何可靠的攻击RSA算法的方式。</p>
+<blockquote>
+<p>非对称加密算法：该算法需要两个密钥，公钥和私钥。公钥和私钥是一对，如果用公钥对数据进行加密，只有用对应的私钥才能解密；反之，如果用私钥对数据进行加密，只有用对应的公钥才能加密。简单来说，即“公钥加密，私钥解密；私钥加密，公钥解密”。</p>
+</blockquote>
+<h3 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h3><p>AES全称为Advanced Encryption Standard，即高级加密标准，是一种<strong>区块加密</strong>标准。这个算法已经替代原来的DES（Data Encryption Standard），被多方分析并广为使用。</p>
+<blockquote>
+<p>区块加密是一种<strong>对称加密算法</strong>。这类算法在加密和解密时使用相同的密钥。</p>
+</blockquote>
+<h2 id="加密使用"><a href="#加密使用" class="headerlink" title="加密使用"></a>加密使用</h2><h3 id="使用RSA"><a href="#使用RSA" class="headerlink" title="使用RSA"></a>使用RSA</h3><p>首先，需要生成一对公钥和私钥，生成方法很多，可以网上搜索，下面给出一种示例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//生成密钥对  </span></span><br><span class="line"><span class="function"><span class="keyword">private</span> KeyPair <span class="title">generateKeyPair</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(<span class="string">"RSA"</span>,</span><br><span class="line">                <span class="keyword">new</span> org.bouncycastle.jce.provider.BouncyCastleProvider());</span><br><span class="line">        <span class="comment">// 这个值关系到块加密的大小，可以更改，但是不要太大，否则效率会低</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> KEY_SIZE = <span class="number">1024</span>; <span class="comment">//1024-bit密钥----目前较流行</span></span><br><span class="line">        keyPairGen.initialize(KEY_SIZE, <span class="keyword">new</span> SecureRandom());</span><br><span class="line">        KeyPair keyPair = keyPairGen.genKeyPair();</span><br><span class="line">        <span class="keyword">return</span> keyPair;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(e.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"> <span class="comment">//生成公钥</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> RSAPublicKey <span class="title">generateRSAPublicKey</span><span class="params">(<span class="keyword">byte</span>[] modulus,</span></span></span><br><span class="line"><span class="function"><span class="params">                                          <span class="keyword">byte</span>[] publicExponent)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">    KeyFactory keyFac = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        keyFac = KeyFactory.getInstance(<span class="string">"RSA"</span>,</span><br><span class="line">                <span class="keyword">new</span> org.bouncycastle.jce.provider.BouncyCastleProvider());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(ex.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">    RSAPublicKeySpec pubKeySpec = <span class="keyword">new</span> RSAPublicKeySpec(<span class="keyword">new</span> BigInteger(</span><br><span class="line">            modulus), <span class="keyword">new</span> BigInteger(publicExponent));</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (RSAPublicKey) keyFac.generatePublic(pubKeySpec);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InvalidKeySpecException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(ex.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"> <span class="comment">//生成私钥</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> RSAPrivateKey <span class="title">generateRSAPrivateKey</span><span class="params">(<span class="keyword">byte</span>[] modulus,</span></span></span><br><span class="line"><span class="function"><span class="params">                                            <span class="keyword">byte</span>[] privateExponent)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    KeyFactory keyFac = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        keyFac = KeyFactory.getInstance(<span class="string">"RSA"</span>,</span><br><span class="line">                <span class="keyword">new</span> org.bouncycastle.jce.provider.BouncyCastleProvider());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(ex.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">    RSAPrivateKeySpec priKeySpec = <span class="keyword">new</span> RSAPrivateKeySpec(<span class="keyword">new</span> BigInteger(</span><br><span class="line">            modulus), <span class="keyword">new</span> BigInteger(privateExponent));</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (RSAPrivateKey) keyFac.generatePrivate(priKeySpec);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InvalidKeySpecException ex) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(ex.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>生成之后，公钥存放在客户端，可以被别人知道，而私钥则要放在服务端，不能泄露。如果公司有人事变动，避免离职人员泄露私钥，可以重新生成密钥。</p>
+<p>单独使用RSA加密，只适用于<strong>客户端传输给服务器的数据重要，服务器返回的数据不重要</strong>的情况。比如传递用户的手机号等个人信息，需要在客户端使用公钥对数据进行加密，传递到服务器后使用私钥进行解密。而服务器返回给客户端的数据，主要是一些状态码以及提示信息，不需要加密，再直接返回即可。</p>
+<h3 id="使用RSA-AES"><a href="#使用RSA-AES" class="headerlink" title="使用RSA+AES"></a>使用RSA+AES</h3><p>然而还有一些情况，是属于<strong>客户端传输给服务器的数据重要，服务器返回的数据也重要</strong>。比如用户进行登录时，传递的用户名密码需要加密，返回的令牌Token也需要加密。由于公钥是公开的，只使用RSA加密没办法对返回数据进行加密。这时候，就需要再结合AES加密了。</p>
+<p>使用这种加密，主要有以下几个步骤（如果返回数据不重要，可以省略6，7步骤）。</p>
+<ol>
+<li><p>客户端随机产生AES密钥。</p>
+</li>
+<li><p>客户端对要传输的重要数据进行AES加密。</p>
+</li>
+<li><p>客户端对AES的密钥，使用RSA的公钥加密。</p>
+</li>
+<li><p>服务端对拿到的AES密钥用RSA的私钥进行解密，拿到AES密钥原文。</p>
+</li>
+<li><p>服务端对加密后的重要信息进行AES解密，得到原始内容。</p>
+</li>
+<li><p>对返回数据，使用得到的AES密钥加密，返回给客户端。</p>
+</li>
+<li><p>客户端用之前随机产生的AES密钥，对返回结果进行解密。</p>
+</li>
+</ol>
+<p>在这种加密方式中，AES的密钥是在传输过程中才随机生成的，而且传输时通过RSA加密，所以无法被获取到，能有效地保障数据的安全。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://MiraleChen001.github.io/2018/03/11/Android-数据加密/" data-id="cjwlstn330000t0vjsvs30mjh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/加密/">加密</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/11/Android中的回调机制/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Android中的回调机制
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/11/JVM-DVM-ART到底是些什么/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">JVM,DVM,ART到底是些什么</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android-基础/">Android 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android-实战/">Android 实战</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/博客搭建/">博客搭建</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/多线程/">多线程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/事件拦截/">事件拦截</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/六大原则/">六大原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/加密/">加密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单例模式/">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摇晃截图/">摇晃截图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/退出/">退出</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/邮件/">邮件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/事件拦截/" style="font-size: 10px;">事件拦截</a> <a href="/tags/六大原则/" style="font-size: 10px;">六大原则</a> <a href="/tags/加密/" style="font-size: 10px;">加密</a> <a href="/tags/单例模式/" style="font-size: 10px;">单例模式</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 20px;">抽象工厂模式</a> <a href="/tags/摇晃截图/" style="font-size: 10px;">摇晃截图</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/退出/" style="font-size: 10px;">退出</a> <a href="/tags/邮件/" style="font-size: 10px;">邮件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/29/Android实现手机摇晃截图/">Android实现手机摇晃截图</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/26/在Android项目中集成发送邮件功能/">在Android项目中集成发送邮件功能</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/23/设计模式系列（五）：建造者模式/">设计模式系列（五）：建造者模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（四）：模板方法模式/">设计模式系列（四）：模板方法模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（三）：抽象工厂模式/">设计模式系列（三）：抽象工厂模式</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

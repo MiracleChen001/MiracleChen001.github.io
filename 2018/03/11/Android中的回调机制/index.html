@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Android中的回调机制 | Miracle Chen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="回调就是A类中调用B类的方法b，然后B类中反过来调用A类的方法a。a这个方法就是回调方法。">
+<meta name="keywords" content="回调">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android中的回调机制">
+<meta property="og:url" content="http://MiraleChen001.github.io/2018/03/11/Android中的回调机制/index.html">
+<meta property="og:site_name" content="Miracle Chen">
+<meta property="og:description" content="回调就是A类中调用B类的方法b，然后B类中反过来调用A类的方法a。a这个方法就是回调方法。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-11T07:13:49.832Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android中的回调机制">
+<meta name="twitter:description" content="回调就是A类中调用B类的方法b，然后B类中反过来调用A类的方法a。a这个方法就是回调方法。">
+  
+    <link rel="alternate" href="/atom.xml" title="Miracle Chen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Miracle Chen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">拿来长岛冰茶，换我半夜安睡</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://MiraleChen001.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Android中的回调机制" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/11/Android中的回调机制/" class="article-date">
+  <time datetime="2018-03-11T07:12:36.000Z" itemprop="datePublished">2018-03-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android-基础/">Android 基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android中的回调机制
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>回调就是A类中调用B类的方法b，然后B类中反过来调用A类的方法a。a这个方法就是回调方法。</p>
+<a id="more"></a>
+
+<h2 id="概念分析"><a href="#概念分析" class="headerlink" title="概念分析"></a>概念分析</h2><p>直接看回调概念，可能会是一头雾水，这个绕口令在说啥。那么就用一个现实生活中的场景，来模拟一下回调。</p>
+<p>有一天，老板有一个活，需要员工来完成。老板很忙，有很多其他事，不能等着员工一直到这个活干完。于是他告诉员工，干完这个活后，就去办公室通知他。过了一天，员工打电话告诉老板，活干完了。通知老板这个行为就是一种回调。</p>
+<h2 id="实际意义"><a href="#实际意义" class="headerlink" title="实际意义"></a>实际意义</h2><p>那么，为什么要用到回调呢？首先，编码过程中可能会出现像上面安排活一样的异步耗时需求。其次，回调增强了代码的可扩展性。</p>
+<p>比如我们在使用框架的时候，直接调用框架提供的API就可以了。但如果我们想让框架来调用自己写的类中方法，该如何实现呢？难道要去改框架中的代码吗？所以，优秀的框架都会提供好相关的回调接口。我们只需要实现相关的接口，即可完成注册，让框架在合适的时候调用我们自己写的类。</p>
+<p>可以反回头再读一下回调的定义：<strong>A类中调用B类的方法b，然后B类中反过来调用A类的方法a</strong>。这里我们写的类就是A,框架就是B。这样，不用去修改框架B，只去改自己的类A,就可以个性化定制框架所调用的方法，增强框架的代码扩展性。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>下面，以老板让员工干活，员工干完通知老板为例，用代码实现这一需求。</p>
+<h3 id="回调接口"><a href="#回调接口" class="headerlink" title="回调接口"></a>回调接口</h3><p>首先，定义一个回调接口，里面定义一个回调函数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//回调接口，老板要实现此接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">CallBack</span> </span>&#123;</span><br><span class="line">    <span class="comment">//提供联系方法（办公室地址），用来接收员工的汇报</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receive</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="老板类"><a href="#老板类" class="headerlink" title="老板类"></a>老板类</h3><p>然后创建回调对象，即老板类。因为员工干完活要通知老板，所以老板要实现回调接口，提供联系方法，接收员工的汇报。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//老板类，实现回调接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Boss</span> <span class="keyword">implements</span> <span class="title">CallBack</span> </span>&#123;</span><br><span class="line">	<span class="comment">//员工对象的引用</span></span><br><span class="line">    <span class="keyword">private</span> Employee employee;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Boss</span><span class="params">(Employee employee)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.employee = employee;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//分配活给员工</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">assign</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        employee.setCallBack(Boss.<span class="keyword">this</span>);</span><br><span class="line">        employee.work();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receive</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"我知道这个活已经做完了"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="员工类"><a href="#员工类" class="headerlink" title="员工类"></a>员工类</h3><p>接着创建控制对象，即员工类。他必须要知道老板的地址（持有回调接口），才能跟老板进行汇报。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//员工类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> CallBack callBack = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//进行注册，获取老板的联系方式</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCallBack</span><span class="params">(CallBack callBack)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.callBack = callBack;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//员工干活</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//1.开始干活</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++) &#123;</span><br><span class="line">            System.out.println(<span class="string">"事情的第"</span>+i+<span class="string">"步干完了"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//2.通知老板</span></span><br><span class="line">        callBack.receive();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试类"><a href="#测试类" class="headerlink" title="测试类"></a>测试类</h3><p>最后创建测试类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Employee employee = <span class="keyword">new</span> Employee();</span><br><span class="line">        Boss boss = <span class="keyword">new</span> Boss(employee);</span><br><span class="line">        boss.assign();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="步骤总结"><a href="#步骤总结" class="headerlink" title="步骤总结"></a>步骤总结</h2><ol>
+<li>定义一个回调接口CallBack。</li>
+<li>创建一个回调对象Class A，实现回调接口CallBack。</li>
+<li>创建一个控制对象Class B，含有一个参数为CallBack的方法。 </li>
+<li>回调对象Class A中包含一个控制对象Class B的引用。</li>
+<li>Class A调用Class B的方法b。</li>
+<li>Class B就可以在b方法中调用Class A的方法a。</li>
+</ol>
+<h2 id="Android实例"><a href="#Android实例" class="headerlink" title="Android实例"></a>Android实例</h2><p>Android中View的点击事件就用到了回调机制。下面就用这个Andriod中最常见的代码做一下简单分析。</p>
+<p>首先是有一个回调接口OnClickListener。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这个是View的一个回调接口  </span></span><br><span class="line"><span class="comment">//Interface definition for a callback to be invoked when a view is clicked.  </span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnClickListener</span> </span>&#123;  </span><br><span class="line">	<span class="comment">//Called when a view has been clicked. </span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span></span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后是有一个控制对象View，包含一个参数为OnClickListener的方法setOnClickListener。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">View</span> <span class="keyword">implements</span> <span class="title">Drawable</span>.<span class="title">Callback</span>, <span class="title">KeyEvent</span>.<span class="title">Callback</span>, <span class="title">AccessibilityEventSource</span> </span>&#123;   </span><br><span class="line">    <span class="keyword">protected</span> OnClickListener mOnClickListener;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnClickListener</span><span class="params">(OnClickListener l)</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">if</span> (!isClickable()) &#123;  </span><br><span class="line">            setClickable(<span class="keyword">true</span>);  </span><br><span class="line">        &#125;  </span><br><span class="line">        mOnClickListener = l;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">performClick</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);  </span><br><span class="line">        <span class="keyword">if</span> (mOnClickListener != <span class="keyword">null</span>) &#123;  </span><br><span class="line">            playSoundEffect(SoundEffectConstants.CLICK);    </span><br><span class="line">            <span class="comment">//B类调用A类的方法onClick()，这个onClick()就是回调方法  </span></span><br><span class="line">            mOnClickListener.onClick(<span class="keyword">this</span>);  </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着是在回调对象MainActivity中实现回调接口OnClickListener，包含控制对象View的引用button，并调用控制对象View的方法setOnClickListener。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> <span class="keyword">implements</span> <span class="title">OnClickListener</span></span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> Button button;  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);  </span><br><span class="line">        setContentView(R.layout.activity_main);  </span><br><span class="line">        button = (Button)findViewById(R.id.button1);    </span><br><span class="line">        button.setOnClickListener(<span class="keyword">this</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="comment">//用户点击Button时调用的回调函数，可以个性化定义 </span></span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;  </span><br><span class="line">        Toast.makeText(getApplication(), <span class="string">"点击了"</span>, Toast.LENGTH_LONG).show();  </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以对比上面总结出来的步骤，感受Android的点击事件是如何一步一步实现回调的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://MiraleChen001.github.io/2018/03/11/Android中的回调机制/" data-id="cjwlstn4h0001t0vjawox2beb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/回调/">回调</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/11/Activity启动模式详解/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Activity启动模式详解
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/11/Android-数据加密/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android 数据加密</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android-基础/">Android 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android-实战/">Android 实战</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/博客搭建/">博客搭建</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/多线程/">多线程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/事件拦截/">事件拦截</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/六大原则/">六大原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/加密/">加密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单例模式/">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摇晃截图/">摇晃截图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/退出/">退出</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/邮件/">邮件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/事件拦截/" style="font-size: 10px;">事件拦截</a> <a href="/tags/六大原则/" style="font-size: 10px;">六大原则</a> <a href="/tags/加密/" style="font-size: 10px;">加密</a> <a href="/tags/单例模式/" style="font-size: 10px;">单例模式</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 20px;">抽象工厂模式</a> <a href="/tags/摇晃截图/" style="font-size: 10px;">摇晃截图</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/退出/" style="font-size: 10px;">退出</a> <a href="/tags/邮件/" style="font-size: 10px;">邮件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/29/Android实现手机摇晃截图/">Android实现手机摇晃截图</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/26/在Android项目中集成发送邮件功能/">在Android项目中集成发送邮件功能</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/23/设计模式系列（五）：建造者模式/">设计模式系列（五）：建造者模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（四）：模板方法模式/">设计模式系列（四）：模板方法模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（三）：抽象工厂模式/">设计模式系列（三）：抽象工厂模式</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

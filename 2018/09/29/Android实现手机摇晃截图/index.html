@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Android实现手机摇晃截图 | Miracle Chen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="今天来介绍个这段时间做的功能，手机摇晃截图。因为这个功能比较常见，所以记录一下以便于之后用到时查阅。">
+<meta name="keywords" content="摇晃截图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android实现手机摇晃截图">
+<meta property="og:url" content="http://MiraleChen001.github.io/2018/09/29/Android实现手机摇晃截图/index.html">
+<meta property="og:site_name" content="Miracle Chen">
+<meta property="og:description" content="今天来介绍个这段时间做的功能，手机摇晃截图。因为这个功能比较常见，所以记录一下以便于之后用到时查阅。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-29T08:23:49.068Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android实现手机摇晃截图">
+<meta name="twitter:description" content="今天来介绍个这段时间做的功能，手机摇晃截图。因为这个功能比较常见，所以记录一下以便于之后用到时查阅。">
+  
+    <link rel="alternate" href="/atom.xml" title="Miracle Chen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Miracle Chen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">拿来长岛冰茶，换我半夜安睡</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://MiraleChen001.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Android实现手机摇晃截图" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/29/Android实现手机摇晃截图/" class="article-date">
+  <time datetime="2018-09-29T08:12:09.000Z" itemprop="datePublished">2018-09-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android-实战/">Android 实战</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android实现手机摇晃截图
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天来介绍个这段时间做的功能，手机摇晃截图。因为这个功能比较常见，所以记录一下以便于之后用到时查阅。</p>
+<a id="more"></a>
+
+<p>这里说上去是一个功能，其实是有两个需求，即<strong>摇晃</strong>&amp;<strong>截图</strong>。</p>
+<h2 id="摇晃"><a href="#摇晃" class="headerlink" title="摇晃"></a>摇晃</h2><p>首先介绍这个摇晃，也就是我们常说的“手机摇一摇”。这个看起来高端，其实实现起来很简单，就是通过SensorManager来检测手机的重力感应，进而判读用户是否在主动的摇晃手机。</p>
+<h3 id="核心Service类"><a href="#核心Service类" class="headerlink" title="核心Service类"></a>核心Service类</h3><p>我们选择建立一个Service，在里面创建我们的SensorManager，并为其注册SensorEventListener，在监听里实现摇晃的判断。具体代码如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">package com.chen.screenshot;</span><br><span class="line"></span><br><span class="line">import android.app.Service;</span><br><span class="line">import android.content.Context;</span><br><span class="line">import android.content.Intent;</span><br><span class="line">import android.hardware.Sensor;</span><br><span class="line">import android.hardware.SensorEvent;</span><br><span class="line">import android.hardware.SensorEventListener;</span><br><span class="line">import android.hardware.SensorManager;</span><br><span class="line">import android.os.IBinder;</span><br><span class="line">import android.util.Log;</span><br><span class="line"></span><br><span class="line">public class ShakerWatchService extends Service &#123;</span><br><span class="line">    private static final String LOG_TAG = ShakerWatchService.class.getName();</span><br><span class="line">    private SensorManager mSensorManager;</span><br><span class="line">    private SensorEventListener mSensorEventListener = new SensorEventListener() &#123;</span><br><span class="line">        private static final float SENSITIVITY_THRESHOLD = 16; //set the sensitivity of accelerometer</span><br><span class="line">        private static final int BUFFER = 5; //Buffer used to average the acceleration</span><br><span class="line">        private static final int SHAKE_DIMENSION = 3; //movement direction</span><br><span class="line">        private float[] gravity = new float[SHAKE_DIMENSION];</span><br><span class="line">        private float average = 0;</span><br><span class="line">        private int fill = 0;</span><br><span class="line">        @Override</span><br><span class="line">        public void onSensorChanged(SensorEvent event) &#123;</span><br><span class="line">            final float alpha = 0.8F;</span><br><span class="line"></span><br><span class="line">            for (int i = 0; i &lt; SHAKE_DIMENSION; i++) &#123;</span><br><span class="line">                gravity[i] = alpha * gravity[i] + (1 - alpha) * event.values[i];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            float x = event.values[0] - gravity[0];</span><br><span class="line">            float y = event.values[1] - gravity[1];</span><br><span class="line">            float z = event.values[2] - gravity[2];</span><br><span class="line"></span><br><span class="line">            if (fill &lt;= BUFFER) &#123;</span><br><span class="line">                average += Math.abs(x) + Math.abs(y) + Math.abs(z);</span><br><span class="line">                fill++;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                if (average / BUFFER &gt;= SENSITIVITY_THRESHOLD) &#123;</span><br><span class="line">                    handleShakeAction();</span><br><span class="line">                &#125;</span><br><span class="line">                average = 0;</span><br><span class="line">                fill = 0;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void onAccuracyChanged(Sensor sensor, int accuracy) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        super.onCreate();</span><br><span class="line">        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int onStartCommand(Intent intent, int flags, int startId) &#123;</span><br><span class="line">        // 第一个参数是Listener，第二个参数是所得传感器类型，第三个参数值获取传感器信息的频率</span><br><span class="line">        mSensorManager.registerListener(mSensorEventListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);</span><br><span class="line">        return super.onStartCommand(intent, flags, startId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public IBinder onBind(Intent intent) &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onDestroy() &#123;</span><br><span class="line">        mSensorManager.unregisterListener(mSensorEventListener);</span><br><span class="line">        super.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void handleShakeAction() &#123;</span><br><span class="line">        Log.d(LOG_TAG, &quot;handle shake action&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，当service启动时，只要用户摇晃，我们就可以监听到，并触发handleShakeAction()方法。在该方法里写入我们所需要的逻辑即可。</p>
+<h3 id="功能调用"><a href="#功能调用" class="headerlink" title="功能调用"></a>功能调用</h3><p>接着我们在想要使用的时候只需start这个service，想要关闭的时候只要stop这个service就可以了。在Demo里，我在主Activity中使用了一个Switch开关控件来控制摇晃功能的开启与关闭。</p>
+<p>布局文件如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    xmlns:tools=&quot;http://schemas.android.com/tools&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot;</span><br><span class="line">    android:orientation=&quot;vertical&quot;</span><br><span class="line">    tools:context=&quot;.MainActivity&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;Switch</span><br><span class="line">        android:id=&quot;@+id/switch_shaker&quot;</span><br><span class="line">        android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_gravity=&quot;center_horizontal&quot;</span><br><span class="line">        android:layout_margin=&quot;20dp&quot;</span><br><span class="line">        android:switchPadding=&quot;20dp&quot;</span><br><span class="line">        android:text=&quot;start shaker&quot; /&gt;</span><br><span class="line">&lt;/LinearLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<p>最后是Activity中的调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">package com.chen.screenshot;</span><br><span class="line"></span><br><span class="line">import android.content.Intent;</span><br><span class="line">import android.os.Bundle;</span><br><span class="line">import android.support.v7.app.AppCompatActivity;</span><br><span class="line">import android.widget.CompoundButton;</span><br><span class="line">import android.widget.Switch;</span><br><span class="line"></span><br><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line"></span><br><span class="line">    private Switch mShakerSwitch;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        mShakerSwitch = findViewById(R.id.switch_shaker);</span><br><span class="line">        mShakerSwitch.setChecked(false);</span><br><span class="line">        mShakerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) &#123;</span><br><span class="line">                Intent intent = new Intent(MainActivity.this,ShakerWatchService.class);</span><br><span class="line">                if (isChecked) &#123;</span><br><span class="line">                    startService(intent);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    stopService(intent);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onDestroy() &#123;</span><br><span class="line">        Intent intent = new Intent(MainActivity.this,ShakerWatchService.class);</span><br><span class="line">        stopService(intent);</span><br><span class="line">        super.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此我们的“手机摇一摇”功能就算是完工了。</p>
+<h2 id="截图"><a href="#截图" class="headerlink" title="截图"></a>截图</h2><p>接下来就是要完成手机截图了。截图的方法有很多种，这里介绍最具代表性的三种。</p>
+<h3 id="方法一：View截屏"><a href="#方法一：View截屏" class="headerlink" title="方法一：View截屏"></a>方法一：View截屏</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public Bitmap capture(Activity activity) &#123;</span><br><span class="line">    activity.getWindow().getDecorView().setDrawingCacheEnabled(true);</span><br><span class="line">    Bitmap bmp = activity.getWindow().getDecorView().getDrawingCache();</span><br><span class="line">    return bmp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的思路很清晰，就是获取Activity的Decor View,然后通过View的getDrawingCache（）方法获取View的截屏。这种方法不需额外权限，也不需要Root。但是它不能截取到状态栏，也不能截取SurfaceView及WebView。</p>
+<h3 id="方法二：adb截屏"><a href="#方法二：adb截屏" class="headerlink" title="方法二：adb截屏"></a>方法二：adb截屏</h3><p>这个方法用起来更加简单，只需要在代码中执行一行截屏的adb shell命令即可。麻烦的一点是，需要Root权限。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 命令格式： adb shell screencap -p + 文件路径 + 文件名</span><br><span class="line">adb shell screencap -p /sdcard/sreenshot1.png</span><br></pre></td></tr></table></figure>
+
+<h3 id="方法三：虚拟桌面截屏"><a href="#方法三：虚拟桌面截屏" class="headerlink" title="方法三：虚拟桌面截屏"></a>方法三：虚拟桌面截屏</h3><p>鉴于上面两种方法的局限性，我们实际项目中采取了第三种方法，利用Android 5.0开放的录屏API来进行截屏。说到这可能你也发现了，这个方法也是有局限性的，就是只能在Android 5.0以上的手机使用。不过手机更新越来越快，4.X的手机也越来越少，5.0其实也并不算一个很过分的门槛。</p>
+<p>该方法的原理是启动屏幕捕捉，使用<strong>MediaProjection</strong>和<strong>ImageReader</strong>创建一个虚拟桌面，然后将捕捉的数据传递到虚拟桌面，最后使用<strong>ImageReader</strong>截取虚拟桌面的一帧画面。</p>
+<p>先建立一个AutoScreenShot类，里面写入截屏的核心方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><span class="line">package com.chen.screenshot;</span><br><span class="line"></span><br><span class="line">import android.annotation.TargetApi;</span><br><span class="line">import android.content.Context;</span><br><span class="line">import android.content.Intent;</span><br><span class="line">import android.content.res.Resources;</span><br><span class="line">import android.graphics.Bitmap;</span><br><span class="line">import android.graphics.PixelFormat;</span><br><span class="line">import android.hardware.display.DisplayManager;</span><br><span class="line">import android.hardware.display.VirtualDisplay;</span><br><span class="line">import android.media.Image;</span><br><span class="line">import android.media.ImageReader;</span><br><span class="line">import android.media.projection.MediaProjection;</span><br><span class="line">import android.media.projection.MediaProjectionManager;</span><br><span class="line">import android.os.AsyncTask;</span><br><span class="line">import android.os.Build;</span><br><span class="line">import android.os.Handler;</span><br><span class="line">import android.util.Log;</span><br><span class="line"></span><br><span class="line">import java.io.File;</span><br><span class="line">import java.io.FileNotFoundException;</span><br><span class="line">import java.io.FileOutputStream;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.nio.ByteBuffer;</span><br><span class="line"></span><br><span class="line">public class AutoScreenShot &#123;</span><br><span class="line">    private static final String LOG_TAG = AutoScreenShotActivity.class.getName();</span><br><span class="line">    private static final int CAPTURE_DELAY = 800;</span><br><span class="line"></span><br><span class="line">    private ImageReader mImageReader;</span><br><span class="line">    private MediaProjection mMediaProjection;</span><br><span class="line">    private VirtualDisplay mVirtualDisplay;</span><br><span class="line">    private OnShotListener mOnShotListener;</span><br><span class="line">    private String mAutoScreenShotPath;</span><br><span class="line"></span><br><span class="line">    @TargetApi(Build.VERSION_CODES.LOLLIPOP)</span><br><span class="line">    public AutoScreenShot(Context context, int reqCode, Intent data) &#123;</span><br><span class="line">        mMediaProjection = ((MediaProjectionManager) context.getSystemService(Context.MEDIA_PROJECTION_SERVICE)).</span><br><span class="line">                getMediaProjection(reqCode, data);</span><br><span class="line"></span><br><span class="line">        mImageReader = ImageReader.newInstance(</span><br><span class="line">                Resources.getSystem().getDisplayMetrics().widthPixels,</span><br><span class="line">                Resources.getSystem().getDisplayMetrics().heightPixels,</span><br><span class="line">                PixelFormat.RGBA_8888,</span><br><span class="line">                1);</span><br><span class="line"></span><br><span class="line">        // 内部存储，无需额外申请权限。路径为：Android/data/com.chen.screenshot/files/screenshot/xxxx.png</span><br><span class="line">        mAutoScreenShotPath = context.getExternalFilesDir(&quot;screenshot&quot;).getAbsoluteFile() + &quot;/&quot; +</span><br><span class="line">                System.currentTimeMillis() + &quot;.png&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @TargetApi(Build.VERSION_CODES.LOLLIPOP)</span><br><span class="line">    public void startScreenShot(OnShotListener onShotListener) &#123;</span><br><span class="line">        Log.d(LOG_TAG, &quot;start screen shot&quot;);</span><br><span class="line">        mOnShotListener = onShotListener;</span><br><span class="line">        mVirtualDisplay = mMediaProjection.createVirtualDisplay(&quot;screen-mirror&quot;,</span><br><span class="line">                Resources.getSystem().getDisplayMetrics().widthPixels,</span><br><span class="line">                Resources.getSystem().getDisplayMetrics().heightPixels,</span><br><span class="line">                Resources.getSystem().getDisplayMetrics().densityDpi,</span><br><span class="line">                DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,</span><br><span class="line">                mImageReader.getSurface(), null, null);</span><br><span class="line"></span><br><span class="line">        // Add this delay for not capture permission dialog shadow</span><br><span class="line">        new Handler().postDelayed(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                Image image = mImageReader.acquireLatestImage();</span><br><span class="line">                new SaveImageTask().execute(image);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, CAPTURE_DELAY);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private class SaveImageTask extends AsyncTask&lt;Image, Void, Bitmap&gt; &#123;</span><br><span class="line">        @TargetApi(Build.VERSION_CODES.LOLLIPOP)</span><br><span class="line">        @Override</span><br><span class="line">        protected Bitmap doInBackground(Image... params) &#123;</span><br><span class="line">            if (params == null || params.length &lt; 1 || params[0] == null) &#123;</span><br><span class="line">                return null;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            Image image = params[0];</span><br><span class="line">            int width = image.getWidth();</span><br><span class="line">            int height = image.getHeight();</span><br><span class="line">            final Image.Plane[] planes = image.getPlanes();</span><br><span class="line">            final ByteBuffer buffer = planes[0].getBuffer();</span><br><span class="line">            int pixelStride = planes[0].getPixelStride();</span><br><span class="line">            int rowStride = planes[0].getRowStride();</span><br><span class="line">            int rowPadding = rowStride - pixelStride * width;</span><br><span class="line">            Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height,</span><br><span class="line">                    Bitmap.Config.ARGB_8888);</span><br><span class="line">            bitmap.copyPixelsFromBuffer(buffer);</span><br><span class="line">            bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height);</span><br><span class="line">            image.close();</span><br><span class="line">            File fileImage = null;</span><br><span class="line">            if (bitmap != null) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    fileImage = new File(mAutoScreenShotPath);</span><br><span class="line">                    if (!fileImage.exists()) &#123;</span><br><span class="line">                        fileImage.createNewFile();</span><br><span class="line">                    &#125;</span><br><span class="line">                    FileOutputStream out = new FileOutputStream(fileImage);</span><br><span class="line">                    if (out != null) &#123;</span><br><span class="line">                        bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);</span><br><span class="line">                        out.flush();</span><br><span class="line">                        out.close();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (FileNotFoundException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                    fileImage = null;</span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                    fileImage = null;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            if (fileImage != null) &#123;</span><br><span class="line">                return bitmap;</span><br><span class="line">            &#125;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @TargetApi(Build.VERSION_CODES.LOLLIPOP)</span><br><span class="line">        @Override</span><br><span class="line">        protected void onPostExecute(Bitmap bitmap) &#123;</span><br><span class="line">            super.onPostExecute(bitmap);</span><br><span class="line">            if (bitmap != null &amp;&amp; !bitmap.isRecycled()) &#123;</span><br><span class="line">                bitmap.recycle();</span><br><span class="line">            &#125;</span><br><span class="line">            if (mVirtualDisplay != null) &#123;</span><br><span class="line">                mVirtualDisplay.release();</span><br><span class="line">            &#125;</span><br><span class="line">            if (mMediaProjection != null) &#123;</span><br><span class="line">                mMediaProjection.stop();</span><br><span class="line">            &#125;</span><br><span class="line">            if (mImageReader != null) &#123;</span><br><span class="line">                mImageReader.close();</span><br><span class="line">            &#125;</span><br><span class="line">            if (mOnShotListener != null) &#123;</span><br><span class="line">                mOnShotListener.onFinish(mAutoScreenShotPath);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public interface OnShotListener &#123;</span><br><span class="line">        void onFinish(String autoScreenShotPath);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着，创建一个透明的Dialog Activity,用来显示截屏权限的dialog。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">package com.chen.screenshot;</span><br><span class="line"></span><br><span class="line">import android.annotation.TargetApi;</span><br><span class="line">import android.app.Activity;</span><br><span class="line">import android.content.Context;</span><br><span class="line">import android.content.Intent;</span><br><span class="line">import android.graphics.drawable.ColorDrawable;</span><br><span class="line">import android.media.projection.MediaProjectionManager;</span><br><span class="line">import android.os.Build;</span><br><span class="line">import android.os.Bundle;</span><br><span class="line">import android.support.annotation.Nullable;</span><br><span class="line">import android.util.Log;</span><br><span class="line">import android.view.Window;</span><br><span class="line">import android.widget.Toast;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * This activity is transparent.</span><br><span class="line"> * Only use for showing auto screen shot permission dialog.</span><br><span class="line"> * Auto screen shot need OS version not below Android 5.0 (SDK level 21)</span><br><span class="line"> */</span><br><span class="line">public class AutoScreenShotActivity extends Activity&#123;</span><br><span class="line">    private static final String LOG_TAG = AutoScreenShotActivity.class.getName();</span><br><span class="line">    private static final int REQUEST_MEDIA_PROJECTION = 10000;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(@Nullable Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        Log.d(LOG_TAG, &quot;AutoScreenShotActivity onCreate()&quot;);</span><br><span class="line">        requestWindowFeature(Window.FEATURE_NO_TITLE);</span><br><span class="line">        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));</span><br><span class="line">        getWindow().setDimAmount(0f);</span><br><span class="line"></span><br><span class="line">        requestScreenShot();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @TargetApi(Build.VERSION_CODES.LOLLIPOP)</span><br><span class="line">    private void requestScreenShot() &#123;</span><br><span class="line">        Log.d(LOG_TAG, &quot;requestScreenShot()&quot;);</span><br><span class="line">        Intent intent = ((MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE)).createScreenCaptureIntent();</span><br><span class="line">        startActivityForResult(intent, REQUEST_MEDIA_PROJECTION);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onActivityResult(int requestCode, int resultCode, Intent data) &#123;</span><br><span class="line">        super.onActivityResult(requestCode, resultCode, data);</span><br><span class="line">        if (requestCode == REQUEST_MEDIA_PROJECTION) &#123;</span><br><span class="line">            if(resultCode == RESULT_OK &amp;&amp; data != null) &#123;</span><br><span class="line">                AutoScreenShot autoScreenShot = new AutoScreenShot(this, resultCode, data);</span><br><span class="line">                autoScreenShot.startScreenShot(new AutoScreenShot.OnShotListener() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void onFinish(String autoScreenShotPath) &#123;</span><br><span class="line">                        Log.d(LOG_TAG, &quot;Auto screen shot success&quot;);</span><br><span class="line">                        Toast.makeText(AutoScreenShotActivity.this, &quot;shot success&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125; else if (resultCode == RESULT_CANCELED) &#123;</span><br><span class="line">                Log.d(LOG_TAG, &quot;Not give permission&quot;);</span><br><span class="line">                Toast.makeText(AutoScreenShotActivity.this, &quot;shot cancel , please give permission.&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">            &#125;</span><br><span class="line">            finish();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>AndroidManifest里记得设置theme为Theme.Dialog。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">	android:name=&quot;.AutoScreenShotActivity&quot;</span><br><span class="line">	android:exported=&quot;true&quot;</span><br><span class="line">	android:theme=&quot;@android:style/Theme.Dialog&quot;/&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这样，摇晃手机截屏的基础功能就算是基本完成了。你可以根据项目的特地需求，在这个基础上再做调整修改。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://MiraleChen001.github.io/2018/09/29/Android实现手机摇晃截图/" data-id="cjwlstn5y001tt0vj6ehwvvkg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/摇晃截图/">摇晃截图</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/08/26/在Android项目中集成发送邮件功能/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">在Android项目中集成发送邮件功能</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android-基础/">Android 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android-实战/">Android 实战</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/博客搭建/">博客搭建</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/多线程/">多线程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/事件拦截/">事件拦截</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/六大原则/">六大原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/加密/">加密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单例模式/">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摇晃截图/">摇晃截图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/退出/">退出</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/邮件/">邮件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/事件拦截/" style="font-size: 10px;">事件拦截</a> <a href="/tags/六大原则/" style="font-size: 10px;">六大原则</a> <a href="/tags/加密/" style="font-size: 10px;">加密</a> <a href="/tags/单例模式/" style="font-size: 10px;">单例模式</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 20px;">抽象工厂模式</a> <a href="/tags/摇晃截图/" style="font-size: 10px;">摇晃截图</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/退出/" style="font-size: 10px;">退出</a> <a href="/tags/邮件/" style="font-size: 10px;">邮件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/29/Android实现手机摇晃截图/">Android实现手机摇晃截图</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/26/在Android项目中集成发送邮件功能/">在Android项目中集成发送邮件功能</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/23/设计模式系列（五）：建造者模式/">设计模式系列（五）：建造者模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（四）：模板方法模式/">设计模式系列（四）：模板方法模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（三）：抽象工厂模式/">设计模式系列（三）：抽象工厂模式</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

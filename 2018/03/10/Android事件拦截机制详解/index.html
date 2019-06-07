@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Android事件拦截机制详解 | Miracle Chen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="当Android系统捕获到用户的触摸事件后，我们该如何准确地找到真正想要处理这个事件的控件呢？对于一些常见的滑动冲突，我们又该如何去解决呢？看完这一篇，你就全明白了。">
+<meta name="keywords" content="事件拦截">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android事件拦截机制详解">
+<meta property="og:url" content="http://MiraleChen001.github.io/2018/03/10/Android事件拦截机制详解/index.html">
+<meta property="og:site_name" content="Miracle Chen">
+<meta property="og:description" content="当Android系统捕获到用户的触摸事件后，我们该如何准确地找到真正想要处理这个事件的控件呢？对于一些常见的滑动冲突，我们又该如何去解决呢？看完这一篇，你就全明白了。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/touch_intercept/model.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/touch_intercept/state1.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/touch_intercept/state_2.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/touch_intercept/state_3.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/touch_intercept/state_4.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/touch_intercept/state_5.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+<meta property="og:updated_time" content="2018-03-11T07:03:12.303Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android事件拦截机制详解">
+<meta name="twitter:description" content="当Android系统捕获到用户的触摸事件后，我们该如何准确地找到真正想要处理这个事件的控件呢？对于一些常见的滑动冲突，我们又该如何去解决呢？看完这一篇，你就全明白了。">
+<meta name="twitter:image" content="http://opzh3oodr.bkt.clouddn.com/touch_intercept/model.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+  
+    <link rel="alternate" href="/atom.xml" title="Miracle Chen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Miracle Chen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">拿来长岛冰茶，换我半夜安睡</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://MiraleChen001.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Android事件拦截机制详解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/10/Android事件拦截机制详解/" class="article-date">
+  <time datetime="2018-03-10T08:58:21.000Z" itemprop="datePublished">2018-03-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android-基础/">Android 基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android事件拦截机制详解
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>当Android系统捕获到用户的触摸事件后，我们该如何准确地找到真正想要处理这个事件的控件呢？对于一些常见的滑动冲突，我们又该如何去解决呢？看完这一篇，你就全明白了。</p>
+<a id="more"></a>
+
+<h2 id="触摸事件"><a href="#触摸事件" class="headerlink" title="触摸事件"></a>触摸事件</h2><p>要想了解触摸事件的拦截机制，首先我们必须得清楚什么是触摸事件。很简单，触摸事件就是捕获到用户触摸屏幕的行为后产生的事件。</p>
+<p>比如说，当一个按钮被点击时，通常就会产生两至三个事件：按下，（滑动），抬起。Android专门为触摸事件封装了一个类：<strong>MontionEvent</strong>。如果要重写触摸相关的方法，比如onTouchEvent(), 参数一般都含有MontionEvent类。</p>
+<p>在MontionEvent类里，封装了不少有用的东西。比如通过<strong>event.getX()</strong>以及<strong>evnet.getRawX()</strong>方法来分别获取触摸点的相对位置和绝对位置；还有通过<strong>event.getAction()</strong>获取触摸类型（MotionEvent.ACTION_DOWN,MotionEvent.ACTION_MOVE,MotionEvent.ACTION_UP等）。</p>
+<p>所以说，触摸事件就是一个简单的动作类型加坐标。但Android的View结构是树状的，可以通过不同的组合来实现不同样式。举一个简单的例子，有一个View，放在一个ViewGroupA里，而这个ViewGroupA放在一个ViewGroupB里，此时触摸这个View，这个事件到底该怎么分呢？所以，就产生了事件拦截这个东西。</p>
+<h2 id="事件拦截"><a href="#事件拦截" class="headerlink" title="事件拦截"></a>事件拦截</h2><h3 id="构建模型"><a href="#构建模型" class="headerlink" title="构建模型"></a>构建模型</h3><p>事件拦截在身边可以找到一个非常契合且非常贴近生活的例子。比如在你的公司，你是一个普通员工，在你的上面是技术主管，技术主管再往上是总经理。总经理给技术主管安排任务，技术主管再分派给你；你完成任务后，汇报给技术主管，技术主管再汇报给总经理。</p>
+<p>在上面的例子里，<strong>总经理就是最外层的ViewGroupA，技术主管就是中间的ViewGroupB，你就是最里面的那个View</strong>。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/touch_intercept/model.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="事件拦截模型"></p>
+<p>我们这里创建对应的布局文件，并重写控件里的方法，来加深我们对事件拦截机制的理解。</p>
+<p>对于ViewGroupA，重写如下三个方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean dispatchTouchEvent(MotionEvent ev) &#123;</span><br><span class="line">    Log.d(&quot;Chen&quot;, &quot;ViewGroupA dispatchTouchEvent&quot;);</span><br><span class="line">    return super.dispatchTouchEvent(ev);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">public boolean onInterceptTouchEvent(MotionEvent ev) &#123;</span><br><span class="line">    Log.d(&quot;Chen&quot;, &quot;ViewGroupA onInterceptTouchEvent&quot;);</span><br><span class="line">    return super.onInterceptTouchEvent(ev);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">public boolean onTouchEvent(MotionEvent event) &#123;</span><br><span class="line">    Log.d(&quot;Chen&quot;, &quot;ViewGroupA onTouchEvent&quot;);</span><br><span class="line">    return super.onTouchEvent(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于View，重写如下两个方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean dispatchTouchEvent(MotionEvent ev) &#123;</span><br><span class="line">    Log.d(&quot;Chen&quot;, &quot;View dispatchTouchEvent&quot;);</span><br><span class="line">    return super.dispatchTouchEvent(ev);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line">public boolean onTouchEvent(MotionEvent event) &#123;</span><br><span class="line">    Log.d(&quot;Chen&quot;, &quot;View onTouchEvent&quot;);</span><br><span class="line">    return super.onTouchEvent(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="正常情形"><a href="#正常情形" class="headerlink" title="正常情形"></a>正常情形</h3><p>这里可以看出，ViewGroup的级别比较高，比View多出一个<strong>onInterceptTouchEvent()</strong>方法。这个名字很容易地让我们猜到是事件拦截地核心方法。我们先不改动任何返回值，先点击一下View，观察Log：</p>
+<blockquote>
+<p>D/Chen: ViewGroupA dispatchTouchEvent<br>D/Chen: ViewGroupA onInterceptTouchEvent<br>D/Chen: ViewGroupB dispatchTouchEvent<br>D/Chen: ViewGroupB onInterceptTouchEvent<br>D/Chen: View dispatchTouchEvent<br>D/Chen: View onTouchEvent<br>D/Chen: ViewGroupB onTouchEvent<br>D/Chen: ViewGroupA onTouchEvent</p>
+</blockquote>
+<p>所以我们发现，在正常情形下，事件的传递顺序是：总经理（ViewGroupA） –&gt; 技术主管（ViewGroupB） –&gt; 你（View）。事件传递时先执行dispathTouchEvent()方法（View没有该方法），再执行onInterceptTouchEvent()方法。 事件的处理顺序是你（View） –&gt; 技术主管（ViewGroupB） –&gt; 总经理（ViewGroupA）。事件处理时执行的是onTouchEvent()方法。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/touch_intercept/state1.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="情形一"></p>
+<h3 id="事件分发拦截"><a href="#事件分发拦截" class="headerlink" title="事件分发拦截"></a>事件分发拦截</h3><p>事件传递以及处理的返回值非常容易理解，True就是拦截或处理了，不再继续传递；False就是继续传递。初始情况下，返回值都是False。接下来我们就修改下返回值，验证我们的上述说法。通常情况下，我们不太会改动dispathTouchEvent()方法，而是用onInterceptTouchEvent()进行事件拦截。</p>
+<p>假设总经理（ViewGroupA）发现任务非常简单，自己举手之劳就能完成，不需要再找手下人来做了，于是他就决定自己来做。我们修改ViewGroupA的onInterceptTouchEvent()方法，使其返回Ture，接下来观察Log：</p>
+<blockquote>
+<p>D/Chen: ViewGroupA dispatchTouchEvent<br>D/Chen: ViewGroupA onInterceptTouchEvent<br>D/Chen: ViewGroupA onTouchEvent</p>
+</blockquote>
+<p>跟设想的一样，总经理拦截了事件，手下人就不需要再做这件事了。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/touch_intercept/state_2.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="情形二"></p>
+<p>同理，如果总经理照常分发给技术主管，但技术主管拦截了事件，即ViewGroupB的onInterceptTouchEvent()方法返回了True，Log就会变成这样：</p>
+<blockquote>
+<p>D/Chen: ViewGroupA dispatchTouchEvent<br>D/Chen: ViewGroupA onInterceptTouchEvent<br>D/Chen: ViewGroupB dispatchTouchEvent<br>D/Chen: ViewGroupB onInterceptTouchEvent<br>D/Chen: ViewGroupB onTouchEvent<br>D/Chen: ViewGroupA onTouchEvent</p>
+</blockquote>
+<p>可以看到，这次不用干活的仅仅就是你（View）了。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/touch_intercept/state_3.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="情形三"></p>
+<h2 id="事件处理"><a href="#事件处理" class="headerlink" title="事件处理"></a>事件处理</h2><p>说完了事件拦截分发，接下就是事件的处理了。在上面的正常情形中，我们可以看到，你（View）完成了工作，需要向技术主管（ViewGroupB）汇报，接着技术主管需要向总经理（ViewGroupA）汇报。</p>
+<p>假如你（View）觉得这个工作完成后，没必要再向技术主管（ViewGroupA）汇报了，即在View的onTouchEvnet()方法里返回了True，我们来看一下Log：</p>
+<blockquote>
+<p>D/Chen: ViewGroupA dispatchTouchEvent<br>D/Chen: ViewGroupA onInterceptTouchEvent<br>D/Chen: ViewGroupB dispatchTouchEvent<br>D/Chen: ViewGroupB onInterceptTouchEvent<br>D/Chen: View dispatchTouchEvent<br>D/Chen: View onTouchEvent</p>
+</blockquote>
+<p>可以发现，事件的传递跟正常情形还是一样，但是事件的处理，到了你（View）这里就结束了，因为你没有继续往上进行汇报。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/touch_intercept/state_4.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="情形四"></p>
+<p>如果你（View）正常向技术主管（ViewGroupB）汇报了，但是技术主管觉得没必要再向总经理（ViewGroupA）进行汇报了，Log就会变成这样：</p>
+<blockquote>
+<p>D/Chen: ViewGroupA dispatchTouchEvent<br>D/Chen: ViewGroupA onInterceptTouchEvent<br>D/Chen: ViewGroupB dispatchTouchEvent<br>D/Chen: ViewGroupB onInterceptTouchEvent<br>D/Chen: View dispatchTouchEvent<br>D/Chen: View onTouchEvent<br>D/Chen: ViewGroupB onTouchEvent</p>
+</blockquote>
+<p>这一次，事件分发到了技术主管（ViewGroupB）这里就结束了。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/touch_intercept/state_5.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="情形五"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过上面这么接地气的实例，相信你一定对事件的拦截分发以及处理的流程有了一个非常深入的了解了。</p>
+<p>虽然这个模型是一个最简单的模型，但只要你真正理解了，就能够举一反三。以后再遇到任何复杂的需求，比如滑动冲突的解决，相必你都可以想到方法去解决~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://MiraleChen001.github.io/2018/03/10/Android事件拦截机制详解/" data-id="cjwlstn5h0015t0vjw139ueeq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/事件拦截/">事件拦截</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/11/JVM-DVM-ART到底是些什么/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          JVM,DVM,ART到底是些什么
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/06/使用Hexo搭建Github博客/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">使用Hexo搭建Github博客</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android-基础/">Android 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android-实战/">Android 实战</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/博客搭建/">博客搭建</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/多线程/">多线程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/事件拦截/">事件拦截</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/六大原则/">六大原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/加密/">加密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单例模式/">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摇晃截图/">摇晃截图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/退出/">退出</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/邮件/">邮件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/事件拦截/" style="font-size: 10px;">事件拦截</a> <a href="/tags/六大原则/" style="font-size: 10px;">六大原则</a> <a href="/tags/加密/" style="font-size: 10px;">加密</a> <a href="/tags/单例模式/" style="font-size: 10px;">单例模式</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 20px;">抽象工厂模式</a> <a href="/tags/摇晃截图/" style="font-size: 10px;">摇晃截图</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/退出/" style="font-size: 10px;">退出</a> <a href="/tags/邮件/" style="font-size: 10px;">邮件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/29/Android实现手机摇晃截图/">Android实现手机摇晃截图</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/26/在Android项目中集成发送邮件功能/">在Android项目中集成发送邮件功能</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/23/设计模式系列（五）：建造者模式/">设计模式系列（五）：建造者模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（四）：模板方法模式/">设计模式系列（四）：模板方法模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（三）：抽象工厂模式/">设计模式系列（三）：抽象工厂模式</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

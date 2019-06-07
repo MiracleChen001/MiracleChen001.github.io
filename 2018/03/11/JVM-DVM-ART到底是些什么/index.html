@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>JVM,DVM,ART到底是些什么 | Miracle Chen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="自从学习Java和Android开始，就会陆续的听到JVM、DVM、ART这些名词，然而它们到底是些什么呢，有什么相同又有什么区别呢？下面就来深入了解一下。">
+<meta name="keywords" content="虚拟机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM,DVM,ART到底是些什么">
+<meta property="og:url" content="http://MiraleChen001.github.io/2018/03/11/JVM-DVM-ART到底是些什么/index.html">
+<meta property="og:site_name" content="Miracle Chen">
+<meta property="og:description" content="自从学习Java和Android开始，就会陆续的听到JVM、DVM、ART这些名词，然而它们到底是些什么呢，有什么相同又有什么区别呢？下面就来深入了解一下。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-11T07:08:23.088Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM,DVM,ART到底是些什么">
+<meta name="twitter:description" content="自从学习Java和Android开始，就会陆续的听到JVM、DVM、ART这些名词，然而它们到底是些什么呢，有什么相同又有什么区别呢？下面就来深入了解一下。">
+  
+    <link rel="alternate" href="/atom.xml" title="Miracle Chen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Miracle Chen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">拿来长岛冰茶，换我半夜安睡</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://MiraleChen001.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-JVM-DVM-ART到底是些什么" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/11/JVM-DVM-ART到底是些什么/" class="article-date">
+  <time datetime="2018-03-11T07:04:16.000Z" itemprop="datePublished">2018-03-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android-基础/">Android 基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JVM,DVM,ART到底是些什么
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>自从学习Java和Android开始，就会陆续的听到JVM、DVM、ART这些名词，然而它们到底是些什么呢，有什么相同又有什么区别呢？下面就来深入了解一下。</p>
+<a id="more"></a>
+
+<h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><blockquote>
+<p>JVM全称是Java Virtual Machine，意为Java虚拟机。其本质是一个能够运行以Java语言编写程序的软件。</p>
+</blockquote>
+<p>Java在编译后会生成类似于汇编语言的Java字节码。但与C语言编译后产生的汇编语言不同的是，汇编语言会直接在硬件上跑，但Java字节码是在JVM上跑。需要由JVM把字节码翻译成机器指令，才能使Java程序跑起来。</p>
+<p>JVM远行在操作系统上，屏蔽了底层实现的差异。JRE（Java Runtime Environment，包括JVM、Java核心类库和支持文件）编译时针对每个平台，因此下载JRE时是分平台的。JVM把平台无关的.class里面的字节码翻译成平台相关的机器码。从而实现了Java的跨平台。</p>
+<h2 id="DVM"><a href="#DVM" class="headerlink" title="DVM"></a>DVM</h2><blockquote>
+<p>DVM全称是Dalvik Virtual Machine（Dalvik是作者的祖先曾经居住过的小渔村名字，位于冰岛），是Android中使用的虚拟机。</p>
+</blockquote>
+<p>所有Android程序都运行在Android系统进程里，每一个进程都对应一个Dalvik虚拟机实例。这样，独立的进程可以防止在虚拟机崩溃时所有程序都被关闭。以下列出DVM和JVM的区别。</p>
+<ul>
+<li><strong>运行的字节码不同</strong></li>
+</ul>
+<p>Java程序经过编译，生成Java字节码保存在class文件中，JVM通过解码class文件中的内容来运行程序。</p>
+<p>而DVM运行的是Dalvik字节码。所有的Dalvik字节码是由dx工具，将Java字节码转换而来，并被打包到dex（Dalvik Executable）可执行文件中，DVM通过解释dex文件来执行Dalvik字节码。</p>
+<ul>
+<li><strong>可执行文件体积不同</strong></li>
+</ul>
+<p>dx工具会对Java类程序重新排列，把多个类包含在一个dex文件之中。各个类中重复的字符串和其他常数在dex中只存放一次，以节省空间。所以，Dalvik可执行文件体积更小。</p>
+<ul>
+<li><strong>JVM基于栈，DVM基于寄存器</strong></li>
+</ul>
+<p>JVM基于栈结构，程序在运行时虚拟机需要频繁地从栈上读写数据，这个过程需要更多的指令分派和内存访问次数，会耗费很多CPU时间。</p>
+<p>DVM基于寄存器，数据的访问通过寄存器直接传递，要快很多。</p>
+<p>两种架构各有优劣。一般而言，基于堆栈的机器需要更多指令，基于寄存器的机器指令更长。</p>
+<h2 id="ART"><a href="#ART" class="headerlink" title="ART"></a>ART</h2><blockquote>
+<p>ART全称是Android Runtime，在2013年作为Android4.4系统中的一项测试功能正式对外发布，在5.0及后续版本中作为正式的运行时库取代了以往的DVM。</p>
+</blockquote>
+<p>ART与DVM主要不同在于：DVM采用的是JIT技术，而ART采用的是AOT技术。同时ART也改善了性能、垃圾回收、应用程序排错以及性能分析。</p>
+<blockquote>
+<p>JIT全称是Just In Time，意为即时编译技术。AOT全称是Ahead Of Time，意为预编译技术。它们是两种不同的编译模式。</p>
+</blockquote>
+<p>DVM执行的是dex字节码，依靠JIT编译器去解释执行，运行时动态的将执行效率很高的dex字节码翻译成本地机器码,然后再执行。而ART直接执行的是本地机器码，在应用程序安装过程中，ART就已经将所有字节码重新编译成了机器码。</p>
+<p>DVM的解码过程发生在应用程序的运行过程中，并且应用程序每次重新运行，都要重复这个解码过程。而ART在应用程序运行过程中无需进行实时的编译工作，只需进行直接调用。因此，即使采用了JIT,DVM的总体性能还是不能与ART相比。</p>
+<p>总的来说，ART的优点在于：提高了应用程序的运行效率，减少了手机的电量消耗，提高了移动设备的续航能力，在垃圾回收等机制上也有了较大的提升。而它的缺点在于：ART模式下Android应用程序的安装需要消耗更多的时间，同时也会占用更大的储存空间（大约增加10%~20%）。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://MiraleChen001.github.io/2018/03/11/JVM-DVM-ART到底是些什么/" data-id="cjwlstn4l0004t0vjxsghdrn2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/虚拟机/">虚拟机</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/11/Android-数据加密/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Android 数据加密
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/10/Android事件拦截机制详解/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android事件拦截机制详解</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android-基础/">Android 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android-实战/">Android 实战</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/博客搭建/">博客搭建</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/多线程/">多线程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/事件拦截/">事件拦截</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/六大原则/">六大原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/加密/">加密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单例模式/">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摇晃截图/">摇晃截图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/退出/">退出</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/邮件/">邮件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/事件拦截/" style="font-size: 10px;">事件拦截</a> <a href="/tags/六大原则/" style="font-size: 10px;">六大原则</a> <a href="/tags/加密/" style="font-size: 10px;">加密</a> <a href="/tags/单例模式/" style="font-size: 10px;">单例模式</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 20px;">抽象工厂模式</a> <a href="/tags/摇晃截图/" style="font-size: 10px;">摇晃截图</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/退出/" style="font-size: 10px;">退出</a> <a href="/tags/邮件/" style="font-size: 10px;">邮件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/29/Android实现手机摇晃截图/">Android实现手机摇晃截图</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/26/在Android项目中集成发送邮件功能/">在Android项目中集成发送邮件功能</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/23/设计模式系列（五）：建造者模式/">设计模式系列（五）：建造者模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（四）：模板方法模式/">设计模式系列（四）：模板方法模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（三）：抽象工厂模式/">设计模式系列（三）：抽象工厂模式</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

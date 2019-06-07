@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>设计模式系列开篇：六大原则 | Miracle Chen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="设计模式说白了就是一套由前人们总结出来的一套可以反复使用的经验理论。它可以提高代码的可重用性，增强系统的可维护性，加强代码的可读性。">
+<meta name="keywords" content="六大原则">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式系列开篇：六大原则">
+<meta property="og:url" content="http://MiraleChen001.github.io/2018/04/10/设计模式系列开篇：六大原则/index.html">
+<meta property="og:site_name" content="Miracle Chen">
+<meta property="og:description" content="设计模式说白了就是一套由前人们总结出来的一套可以反复使用的经验理论。它可以提高代码的可重用性，增强系统的可维护性，加强代码的可读性。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-11T12:20:33.463Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="设计模式系列开篇：六大原则">
+<meta name="twitter:description" content="设计模式说白了就是一套由前人们总结出来的一套可以反复使用的经验理论。它可以提高代码的可重用性，增强系统的可维护性，加强代码的可读性。">
+  
+    <link rel="alternate" href="/atom.xml" title="Miracle Chen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Miracle Chen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">拿来长岛冰茶，换我半夜安睡</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://MiraleChen001.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-设计模式系列开篇：六大原则" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/10/设计模式系列开篇：六大原则/" class="article-date">
+  <time datetime="2018-04-10T12:00:27.000Z" itemprop="datePublished">2018-04-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      设计模式系列开篇：六大原则
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>设计模式说白了就是一套由前人们总结出来的一套可以反复使用的经验理论。它可以提高代码的可重用性，增强系统的可维护性，加强代码的可读性。</p>
+<a id="more"></a>
+
+<p>在这套经验理论里，前人们提出了以下六个原则，需要我们在设计时来遵循。</p>
+<h2 id="单一职责原则"><a href="#单一职责原则" class="headerlink" title="单一职责原则"></a>单一职责原则</h2><blockquote>
+<p>Single Responsibility Principle (SRP)：就一个类而言，应该仅有一个引起它变化的原因。</p>
+</blockquote>
+<p>一个类应该是一组相关性很高的函数、数据的封装。两个完全不一样的功能就不应该放在一个类中。</p>
+<p>实际上，如何去划分一个类、一个函数的职责，每个人都有自己的看法。这需要根据个人经验和具体的业务逻辑而定。所以这个原则从概念上来看最简单，实施起来却是最难。</p>
+<p>所幸的是，它也有一些基本的指导原则，比如：<strong>一个类应该是一组相关性很高的函数、数据的封装。两个完全不一样的功能就不应该放在一个类中。</strong></p>
+<p>单一职责原则具有以下优点：</p>
+<ol>
+<li>类的复杂度降低，提高了可读性。</li>
+<li>降低变更引起的风险，容易维护。</li>
+</ol>
+<h2 id="里氏替换原则"><a href="#里氏替换原则" class="headerlink" title="里氏替换原则"></a>里氏替换原则</h2><blockquote>
+<p>Liskov Substitution Principle (LSP)：所有引用父类的地方必须能透明地使用其子类的对象。</p>
+</blockquote>
+<p>这里还存在另外一个定义，相对拗口一点，需要多理解几遍。<strong>如果对每一个类型为S的对象O1，都存在有类型为T的对象O2，使得在以T定义的所有程序P里,所有的对象O2都可以用O1替换，程序P的行为没有发生变化，那么类型S为类型T的子类。</strong></p>
+<p>简单来说就是，只要父类能出现的地方，子类就可以出现。而且替换为子类也不会产生任何错误或者异常。但是反过来就不行了，有子类出现的地方，父类未必就能适应。</p>
+<p>它的优点是：</p>
+<ol>
+<li>提高代码的重用性，子类拥有父类的方法和属性。</li>
+<li>提高代码的可扩展性，子类可形似于父类，但异于父类，保留自我的特性。</li>
+</ol>
+<p>它的缺点是：</p>
+<ol>
+<li>继承是侵入性的，只要继承就必须拥有父类的所有方法和属性，在一定程度上约束了子类，降低了代码的灵活性。</li>
+<li>增加了耦合，当父类的常量、变量或者方法被修改了，需要考虑子类的修改，所以一旦父类有了变动，很可能会造成非常糟糕的结果，要重构大量的代码。</li>
+</ol>
+<h2 id="依赖倒转原则"><a href="#依赖倒转原则" class="headerlink" title="依赖倒转原则"></a>依赖倒转原则</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><blockquote>
+<p>Dependency Inversion  Principle (DIP)：高层模块不应该依赖低层模块，两者都应该依赖其抽象；抽象不应该依赖于细节；细节应当依赖于抽象。</p>
+</blockquote>
+<p>在Java中，细节就是指接口或抽象类，细节就是指实现类。所以这个定义在Java中的表现就是：</p>
+<ol>
+<li>模块间的依赖通过抽象发生，实现类之间不发生直接的依赖关系，其依赖关系是通过接口或抽象类产生的。</li>
+<li>接口或抽象类不依赖于实现类。</li>
+<li>实现类依赖接口或抽象类。</li>
+</ol>
+<p>更简单的定义就是<strong>针对接口编程</strong>，而不是针对实现编程。</p>
+<p>依赖倒置原则可以减少类间的耦合性，提高系统的稳定性，降低并行开发引起的风险，提高代码的可读性和可维护性。</p>
+<h3 id="运用"><a href="#运用" class="headerlink" title="运用"></a>运用</h3><p>我们用一个司机开汽车的例子来深入了解下依赖倒转原则。</p>
+<p>首先有一个奔驰车类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class Benz &#123;</span><br><span class="line">	public void run ()&#123;</span><br><span class="line">		Log.d(&quot;Chen&quot;, &quot;奔驰车在飞奔...&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着有一个司机类，司机可以驾驶奔驰车。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class Driver &#123;</span><br><span class="line">	public void drive (Benz benz) &#123;</span><br><span class="line">		benz.run();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，我们就可以在测试方法中，完成司机开奔驰车了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Driver xiaoWang = new Driver();</span><br><span class="line">Benz benz = new Benz();</span><br><span class="line">xiaoWang.driver(benz);</span><br></pre></td></tr></table></figure>
+
+<p>这个程序看起来很完美，直到有一天，出现了一个宝马汽车类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class Bmw &#123;</span><br><span class="line">	public void run ()&#123;</span><br><span class="line">		Log.d(&quot;Chen&quot;, &quot;宝马车在飞奔...&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>尴尬的事来了，小王作为一个可以开奔驰的司机，居然没办法驾驶宝马车。这显然是不合理的。这就是实现类之间发生了直接的依赖关系带来的，它会加重类间的耦合性，降低代码的可维护性。</p>
+<p>所以我们这里需要设计出司机和汽车的接口，通过它们产生依赖关系。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public interface Icar &#123;</span><br><span class="line">	public void run();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public interface IDriver &#123;</span><br><span class="line">	public void driver(Icar car);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着司机类实现司机接口，奔驰、宝马实现汽车接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class Driver implements IDriver &#123;</span><br><span class="line">	public void driver(Icar car) &#123;</span><br><span class="line">		car.run();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Benz implements ICar&#123;</span><br><span class="line">	public void run ()&#123;</span><br><span class="line">		Log.d(&quot;Chen&quot;, &quot;奔驰车在飞奔...&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Bmw implements ICar&#123;</span><br><span class="line">	public void run ()&#123;</span><br><span class="line">		Log.d(&quot;Chen&quot;, &quot;宝马车在飞奔...&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在不管奔驰、宝马，还是其他的汽车，小王都可以驾驶了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IDriver xiaoWang = new Driver();</span><br><span class="line">Icar benz = new Benz();</span><br><span class="line">Icar bmw = new Bmw();</span><br><span class="line">xiaoWang.driver(benz);</span><br><span class="line">xiaoWang.driver(bmw);</span><br></pre></td></tr></table></figure>
+
+<h2 id="接口隔离原则"><a href="#接口隔离原则" class="headerlink" title="接口隔离原则"></a>接口隔离原则</h2><blockquote>
+<p>Interface  Segregation Principle (ISP)：客户端不应该依赖它不需要的接口，类间的依赖关系应该建立在最小的接口上。</p>
+</blockquote>
+<p>我们需要将非常庞大臃肿的接口拆分成更小的和更具体的接口，这样客户将会只需要知道他们感兴趣的方法。</p>
+<p>也就是说，<strong>要让客户端依赖的接口尽可能少</strong>。</p>
+<h2 id="迪米特法则"><a href="#迪米特法则" class="headerlink" title="迪米特法则"></a>迪米特法则</h2><blockquote>
+<p>Law of  Demeter (LoD)：也称为最少知识原则，一个对象应该对其他对象有最少的了解。</p>
+</blockquote>
+<p>通俗地讲就是，<strong>一个类应该对自己需要耦合或调用的类知道的最少</strong>。类的内部如何实现与调用者或者依赖者没关系，调用者或者依赖者只需要知道它需要的方法即可，其他的可一概不用管。</p>
+<p>LoD要求我们只与直接的朋友通信，不跟陌生人说话。朋友类的定义是，出现在成员变量、方法的输入输出参数中的类。出现在方法体内部的类不属于朋友类。</p>
+<p>LoD的核心观念就是类间解耦，只有弱耦合了以后，类的复用率才可以提高。不过它也会带来系统的复杂性的提高，为维护带来难度。所以采用迪米特法则时需要反复权衡，既做到让结构清晰，又做到高内聚低耦合。</p>
+<h2 id="开闭原则"><a href="#开闭原则" class="headerlink" title="开闭原则"></a>开闭原则</h2><blockquote>
+<p>Open Closed Principle (OCP)：软件中的对象（类、模块、函数等）应当对扩展是开放的，但对修改是封闭的。</p>
+</blockquote>
+<p>程序一旦开发完成，程序中的一个类只应该因错误而被修改，新的或者改变的特性应该通过新建不同的类实现。新建的类可以通过继承的方式重用原类的代码。</p>
+<p>开闭原则是一个终级目标，任何人也无法百分之百做到。但以它为指引，朝着这个方向努力，可以非常显著地改变一个系统的架构，真正做到拥抱变化。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://MiraleChen001.github.io/2018/04/10/设计模式系列开篇：六大原则/" data-id="cjwlstn4l0005t0vj8kx0b8rh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/六大原则/">六大原则</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/11/设计模式系列（一）：单例模式/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          设计模式系列（一）：单例模式
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/27/Java多线程必知概念/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Java多线程必知概念</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android-基础/">Android 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android-实战/">Android 实战</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/博客搭建/">博客搭建</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/多线程/">多线程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/事件拦截/">事件拦截</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/六大原则/">六大原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/加密/">加密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单例模式/">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摇晃截图/">摇晃截图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/退出/">退出</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/邮件/">邮件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/事件拦截/" style="font-size: 10px;">事件拦截</a> <a href="/tags/六大原则/" style="font-size: 10px;">六大原则</a> <a href="/tags/加密/" style="font-size: 10px;">加密</a> <a href="/tags/单例模式/" style="font-size: 10px;">单例模式</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 20px;">抽象工厂模式</a> <a href="/tags/摇晃截图/" style="font-size: 10px;">摇晃截图</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/退出/" style="font-size: 10px;">退出</a> <a href="/tags/邮件/" style="font-size: 10px;">邮件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/29/Android实现手机摇晃截图/">Android实现手机摇晃截图</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/26/在Android项目中集成发送邮件功能/">在Android项目中集成发送邮件功能</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/23/设计模式系列（五）：建造者模式/">设计模式系列（五）：建造者模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（四）：模板方法模式/">设计模式系列（四）：模板方法模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（三）：抽象工厂模式/">设计模式系列（三）：抽象工厂模式</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

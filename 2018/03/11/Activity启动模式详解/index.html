@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Activity启动模式详解 | Miracle Chen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="我们可以通过指定Activity的启动模式，来选择任务栈的具体管理规则。">
+<meta name="keywords" content="Activity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Activity启动模式详解">
+<meta property="og:url" content="http://MiraleChen001.github.io/2018/03/11/Activity启动模式详解/index.html">
+<meta property="og:site_name" content="Miracle Chen">
+<meta property="og:description" content="我们可以通过指定Activity的启动模式，来选择任务栈的具体管理规则。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/activity_launcher_mode/standard.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/activity_launcher_mode_single_task.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/activity_launcher_mode/single_instance.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+<meta property="og:updated_time" content="2018-03-18T08:37:08.065Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Activity启动模式详解">
+<meta name="twitter:description" content="我们可以通过指定Activity的启动模式，来选择任务栈的具体管理规则。">
+<meta name="twitter:image" content="http://opzh3oodr.bkt.clouddn.com/activity_launcher_mode/standard.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim">
+  
+    <link rel="alternate" href="/atom.xml" title="Miracle Chen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Miracle Chen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">拿来长岛冰茶，换我半夜安睡</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://MiraleChen001.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Activity启动模式详解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/11/Activity启动模式详解/" class="article-date">
+  <time datetime="2018-03-11T07:39:08.000Z" itemprop="datePublished">2018-03-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android-基础/">Android 基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Activity启动模式详解
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>我们可以通过指定Activity的启动模式，来选择任务栈的具体管理规则。</p>
+<a id="more"></a>
+
+<h2 id="任务栈"><a href="#任务栈" class="headerlink" title="任务栈"></a>任务栈</h2><p>关于栈结构，相信大家都不陌生，它是一个后进先出（Last In First Out）的线性表。</p>
+<p>而一个Android应用程序功能通常会被拆分成多个Activity，它们之间通过Intent进行连接。Android系统就是通过栈结构来保存应用程序的Activity，栈底的元素是整个任务栈的发起者。一个合理的任务栈是性能的保证和基础。</p>
+<p>当一个App启动时，如果当前环境中不存在该App的任务栈，那么系统就会创建一个任务栈。默认情况下，该App所启动的所有Activity都将在这个任务栈中被管理。这个栈也被称为一个Task，也表示为若干个Activity的集合。需要注意的是，一个Task中的Activity可以来自不同的App，同一个App的Activity也可以不在同一个Task中。</p>
+<h2 id="Mainifest启动模式"><a href="#Mainifest启动模式" class="headerlink" title="Mainifest启动模式"></a>Mainifest启动模式</h2><p>Mainifest文件中一共提供了四种启动模式：</p>
+<ul>
+<li>标准模式（Standard）</li>
+<li>栈顶复用模式（SingleTop）</li>
+<li>栈内复用模式（SingleTask）</li>
+<li>单例模式（SingleInstance）</li>
+</ul>
+<p>它们可以在AndroidMainifest中进行设置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">	android:launchMode=&quot;启动模式&quot;</span><br><span class="line">	//属性</span><br><span class="line">	//standard：标准模式</span><br><span class="line">	//singleTop：栈顶复用模式</span><br><span class="line">	//singleTask：栈内复用模式</span><br><span class="line">	//singleInstance：单例模式</span><br><span class="line">	//如不设置，Activity的启动模式默认为标准模式（standard）</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这四种功能都具有不同的功能，接下来一一地来进行介绍。</p>
+<h3 id="标准模式（Standard）"><a href="#标准模式（Standard）" class="headerlink" title="标准模式（Standard）"></a>标准模式（Standard）</h3><p>Standard是默认的启动模式，如果不指定Activity的启动模式，则使用这种方式启动Activity。</p>
+<p>该模式下一个ActivityA启动了另一个ActivityB时，新启动的ActivityB就会置于任务栈的顶端，并处于活动状态，而ActivityA仍然保留在任务栈中，当用户按下返回键或者调用finish()方法时，系统会移除顶部的ActivityB，让后面的ActivityA恢复活动状态。</p>
+<p>每次启动Activity，都会创建新的实例，覆盖在原Activity上。如下图所示。<br><img src="http://opzh3oodr.bkt.clouddn.com/activity_launcher_mode/standard.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="Standard启动示例"></p>
+<h3 id="栈顶复用模式（SingleTop）"><a href="#栈顶复用模式（SingleTop）" class="headerlink" title="栈顶复用模式（SingleTop）"></a>栈顶复用模式（SingleTop）</h3><p>有些情况下，你可能会觉得Standard模式不够合理。有时候Activity明明在最前面了，还是会继续创建多个Activity，这时候你就需要用到SingleTop模式了。</p>
+<p>该模式下在启动Activity时，系统会判断当前栈顶的Activity是不是要启动的Activity。如果不是则创建新的Activity；如果是则不会创建，而是直接引用这个Activity。</p>
+<p>这种启动模式虽然不会创建新的Activity，但仍会在启动时调用<strong>onNewIntent()</strong>方法。</p>
+<h3 id="栈内复用模式（SingleTask）"><a href="#栈内复用模式（SingleTask）" class="headerlink" title="栈内复用模式（SingleTask）"></a>栈内复用模式（SingleTask）</h3><p>SingleTask模式可以保证让某个活动在整个应用程序的上下文中只存在一个实例。</p>
+<p>该模式会检测整个栈是否存在当前需要启动的Activity。如果不存在正常创建Activity；如果已存在，则将该Activity置于栈顶，并将该Activity以上的其他Activity都销毁。</p>
+<p>如果其他程序以SingleTask模式启动这个Activity，那么它将创建一个新的任务栈。需要注意的是，如果这个Activity已经在后台的一个任务栈中了，那么启动后，后台的这个任务栈将会整个被切换到前台。借助官网的一张图可以很容易地理解这一情况。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/activity_launcher_mode_single_task.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="SingleTask启动示例"></p>
+<p>当Activity2以SingleTask模式启动ActivityY时，ActivityY所在任务栈会被整个切换到前台。所以这时按下返回键，会回到ActivityX，而不是Activity1。</p>
+<p>依据这个特性，我们可以使用该启动模式来一键关闭当前App的所有activity，具体可以参考<a href="https://miraclechen001.github.io/2018/03/14/%E4%B8%80%E9%94%AE%E9%80%80%E5%87%BAApp%E6%96%B9%E6%B3%95%E5%90%88%E9%9B%86/" target="_blank" rel="noopener">一键退出App方法合集</a>。</p>
+<h3 id="单例模式（SingleInstance）"><a href="#单例模式（SingleInstance）" class="headerlink" title="单例模式（SingleInstance）"></a>单例模式（SingleInstance）</h3><p>SingleInstance模式可以保证Activity所在的任务中始终只会有一个Activity，通过这个Activity再打开的其它Activity也会被放入到别的任务当中。系统不会向声明成SingleInstance模式的Activity所在的任务当中再添加其它Activity。</p>
+<p>假如我们的App中有一个Activity是允许其他App调用的，而且其他App可以与我们的App共享这个Activity的实例，我们就可以采用这种模式。因为SingleInstance模式会有一个单独的返回栈来管理这个Activity。</p>
+<p>如果我们用ActivityA打开了ActivityB，而ActivityB是SingleInstance模式，紧接着再用Activity启动ActivityC。此时按下返回键，会发现回直接从ActivityC返回到了ActivityA。具体如下图所示。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/activity_launcher_mode/single_instance.png?imageMogr2/thumbnail/360x/blur/1x0/quality/75%7Cwatermark/2/text/Q2hlbidzIEJsb2c=/font/5b6u6L2v6ZuF6buR/fontsize/240/fill/IzhGMDIxNg==/dissolve/100/gravity/SouthEast/dx/10/dy/10%7Cimageslim" alt="SingleInstance启动示例"></p>
+<h2 id="Intent-Flag启动模式"><a href="#Intent-Flag启动模式" class="headerlink" title="Intent Flag启动模式"></a>Intent Flag启动模式</h2><p>我们不仅可以在AndroidMainifest中设置Activity启动模式，也可以通过activity.addFlag()的模式进行设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">activity.addFlag(Intent.FLAG_ACTIVITY_SINGLE_TOP);</span><br><span class="line">activity.addFlag(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FlAG_ACTIVITY_NEW_TASK);</span><br></pre></td></tr></table></figure>
+
+<h3 id="FlAG-ACTIVITY-NEW-TASK"><a href="#FlAG-ACTIVITY-NEW-TASK" class="headerlink" title="FlAG_ACTIVITY_NEW_TASK"></a>FlAG_ACTIVITY_NEW_TASK</h3><p>该模式使用一个新的TASK来启动一个Activity，但启动的每个Activity都将在一个新的TASK中。</p>
+<p>由于Service中并不存在Activity栈，所以这种模式非常适用于在Service中启动Activity。创建一个新的Activity栈并创建新的Activity实例。</p>
+<h3 id="Intent-FLAG-ACTIVITY-SINGLE-TOP"><a href="#Intent-FLAG-ACTIVITY-SINGLE-TOP" class="headerlink" title="Intent.FLAG_ACTIVITY_SINGLE_TOP"></a>Intent.FLAG_ACTIVITY_SINGLE_TOP</h3><p>与上面的SingleTop模式相同。</p>
+<h3 id="FLAG-ACTIVITY-CLEAR-TOP"><a href="#FLAG-ACTIVITY-CLEAR-TOP" class="headerlink" title="FLAG_ACTIVITY_CLEAR_TOP"></a>FLAG_ACTIVITY_CLEAR_TOP</h3><p>与上面的SingleTask模式相同。</p>
+<h3 id="FLAG-ACTIVITY-NO-HISTORY"><a href="#FLAG-ACTIVITY-NO-HISTORY" class="headerlink" title="FLAG_ACTIVITY_NO_HISTORY"></a>FLAG_ACTIVITY_NO_HISTORY</h3><p>该模式启动Activity，当该Activity启动其他Acitivity后，该Activity就消失了，不会存在于Activity栈中。</p>
+<p>比如分别启动ActivityA、ActivityB和ActivityC，其中ActivityB设置了Intent.FLAG_ACTIVITY_NO_HISTORY模式，最终的任务栈中为ActivityA和ActivityC。</p>
+<h2 id="清空任务栈"><a href="#清空任务栈" class="headerlink" title="清空任务栈"></a>清空任务栈</h2><p>如果用户将任务栈切换到后台之后过了很长一段时间，系统会将这个任务栈除了最底下的Activity之外的其他所有Activity都清除。</p>
+<p>用户重新切换这个任务栈回前台，将只能看到最底下的那个Activity。</p>
+<p>当然，必要的时候，我们也可以在AndroidMainifest中通过设置相关的属性，来改变系统的这种默认行为。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">	android:alwaysRetainTaskState=&quot;true&quot;</span><br><span class="line">	//android:clearTaskOnLaunch=&quot;true&quot;</span><br><span class="line">	//android:finishOnTaskLaunch=&quot;true&quot;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="alwaysRetainTaskState"><a href="#alwaysRetainTaskState" class="headerlink" title="alwaysRetainTaskState"></a>alwaysRetainTaskState</h3><p>如果将最底层的那个Activity的这个属性设置为true，那么上面所描述的默认行为就将不会发生。</p>
+<p>任务中所有的Activity即使过了很长一段时间之后仍然会被继续保留。</p>
+<h3 id="clearTaskOnLaunch"><a href="#clearTaskOnLaunch" class="headerlink" title="clearTaskOnLaunch"></a>clearTaskOnLaunch</h3><p>如果将最底层的那个Activity的这个属性设置为true，那么只要用户离开了当前任务，再次返回的时候就会将最底层Activity之上的所有其它Activity全部清除掉。</p>
+<p>简单来讲，这就是一种和alwaysRetainTaskState完全相反的工作模式，也是默认模式的增强版。</p>
+<p>它保证每次返回任务的时候都会是一种初始化状态，即使用户仅仅离开了很短的一段时间。</p>
+<h3 id="finishOnTaskLaunch"><a href="#finishOnTaskLaunch" class="headerlink" title="finishOnTaskLaunch"></a>finishOnTaskLaunch</h3><p>与前两个模式不同，这个属性不是作用于整个任务上的，而是作用于单个Activity上。</p>
+<p>如果某个Activity将这个属性设置成true，那么用户一旦离开了当前任务，再次返回时这个Activity就会被清除掉。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>学习了这么全面的启动模式的知识，相信你一定对Activity任务栈的管理十分的得心应手了。</p>
+<p>需要明确的一点是，我们使用启动模式和清理方法，是为了让程序的运行更有效率，有更好的用户体验。</p>
+<p>所以使用时一定要根据需求谨慎使用，不能过度滥用，从而导致整个App的栈管理混乱。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://MiraleChen001.github.io/2018/03/11/Activity启动模式详解/" data-id="cjwlstn5f0014t0vj7w63htvb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Activity/">Activity</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/14/一键退出App方法合集/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          一键退出App方法合集
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/11/Android中的回调机制/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android中的回调机制</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android-基础/">Android 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android-实战/">Android 实战</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/博客搭建/">博客搭建</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/多线程/">多线程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/事件拦截/">事件拦截</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/六大原则/">六大原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/加密/">加密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单例模式/">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摇晃截图/">摇晃截图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/退出/">退出</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/邮件/">邮件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/事件拦截/" style="font-size: 10px;">事件拦截</a> <a href="/tags/六大原则/" style="font-size: 10px;">六大原则</a> <a href="/tags/加密/" style="font-size: 10px;">加密</a> <a href="/tags/单例模式/" style="font-size: 10px;">单例模式</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 20px;">抽象工厂模式</a> <a href="/tags/摇晃截图/" style="font-size: 10px;">摇晃截图</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/退出/" style="font-size: 10px;">退出</a> <a href="/tags/邮件/" style="font-size: 10px;">邮件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/29/Android实现手机摇晃截图/">Android实现手机摇晃截图</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/26/在Android项目中集成发送邮件功能/">在Android项目中集成发送邮件功能</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/23/设计模式系列（五）：建造者模式/">设计模式系列（五）：建造者模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（四）：模板方法模式/">设计模式系列（四）：模板方法模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（三）：抽象工厂模式/">设计模式系列（三）：抽象工厂模式</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

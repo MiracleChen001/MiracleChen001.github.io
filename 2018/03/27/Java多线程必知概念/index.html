@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Java多线程必知概念 | Miracle Chen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="不管前台还是后台开发，总避免不了多线程的运用。是时候，好好梳理一下多线程的基本概念了。">
+<meta name="keywords" content="线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java多线程必知概念">
+<meta property="og:url" content="http://MiraleChen001.github.io/2018/03/27/Java多线程必知概念/index.html">
+<meta property="og:site_name" content="Miracle Chen">
+<meta property="og:description" content="不管前台还是后台开发，总避免不了多线程的运用。是时候，好好梳理一下多线程的基本概念了。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/thread/start.png?">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/thread/sleep.png">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/thread/yield.png">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/thread/join.png">
+<meta property="og:image" content="http://opzh3oodr.bkt.clouddn.com/thread/model.png">
+<meta property="og:updated_time" content="2018-03-31T10:26:51.827Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java多线程必知概念">
+<meta name="twitter:description" content="不管前台还是后台开发，总避免不了多线程的运用。是时候，好好梳理一下多线程的基本概念了。">
+<meta name="twitter:image" content="http://opzh3oodr.bkt.clouddn.com/thread/start.png?">
+  
+    <link rel="alternate" href="/atom.xml" title="Miracle Chen" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Miracle Chen</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">拿来长岛冰茶，换我半夜安睡</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://MiraleChen001.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Java多线程必知概念" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/27/Java多线程必知概念/" class="article-date">
+  <time datetime="2018-03-27T13:07:51.000Z" itemprop="datePublished">2018-03-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/多线程/">多线程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java多线程必知概念
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>不管前台还是后台开发，总避免不了多线程的运用。是时候，好好梳理一下多线程的基本概念了。</p>
+<a id="more"></a>
+
+<h2 id="线程的概念"><a href="#线程的概念" class="headerlink" title="线程的概念"></a>线程的概念</h2><blockquote>
+<p>进程一般指一个执行单元。</p>
+</blockquote>
+<p>进程在PC和移动端通常指一个程序和一个应用。</p>
+<p>在Android中，我们也可以通过在AndroidMenifest中指定四大组件的android:process属性，为应用开启多个进程。</p>
+<blockquote>
+<p>线程是操作系统调度的最小单元，是进程的执行单元。</p>
+</blockquote>
+<p>进程和线程的关系如下。</p>
+<ol>
+<li><p>进程与线程是一对多的关系。一个进程可以拥有一个或多个线程，一个线程只有一个父进程。</p>
+</li>
+<li><p>线程之间共享父进程的共享资源，相互之间协同完成父进程所要完成的任务。</p>
+</li>
+<li><p>一个线程可以创建和撤销另一个线程，同一个进程的多个线程之间可以并发执行。</p>
+</li>
+</ol>
+<h2 id="线程的创建"><a href="#线程的创建" class="headerlink" title="线程的创建"></a>线程的创建</h2><h3 id="继承Thread类创建线程"><a href="#继承Thread类创建线程" class="headerlink" title="继承Thread类创建线程"></a>继承Thread类创建线程</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class MyThread extends Thread &#123;</span><br><span class="line">	// 新建一个类继承Thread类，并重写run()方法</span><br><span class="line">	@Override</span><br><span class="line">	public void run() &#123;</span><br><span class="line">		System.out.println(&quot;run in my thread&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		// 创建新建Thread类的实例</span><br><span class="line">		MyThread myThread = new MyThread();</span><br><span class="line">		// 调用实例的start()方法启动线程</span><br><span class="line">		myThread.start();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实际开发中，可以用匿名内部类快速开启一个线程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">new Thread()&#123;</span><br><span class="line">   public void run()&#123;</span><br><span class="line">     System.out.println(&quot;run in my thread&quot;);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;.start();</span><br></pre></td></tr></table></figure>
+
+<h3 id="实现Runnable接口创建线程"><a href="#实现Runnable接口创建线程" class="headerlink" title="实现Runnable接口创建线程"></a>实现Runnable接口创建线程</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class MyRunnable implements Runnable &#123;</span><br><span class="line">	// 新建一个类实现Runnable接口，并重写run()方法</span><br><span class="line">	@Override</span><br><span class="line">	public void run() &#123;</span><br><span class="line">		System.out.println(&quot;run in my thread&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		// 创建新建类的实例</span><br><span class="line">		MyRunnable myRunnable = new MyRunnable();</span><br><span class="line">		// 通过runnable实例，新建Thread类实例</span><br><span class="line">		Thread thread = new Thread(myRunnable);</span><br><span class="line">		// 调用新建Thread类实例的start()方法启动线程</span><br><span class="line">		thread.start();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样，我们可以用匿名内部类快速开启一个线程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">new Thread(new Runnable() &#123;</span><br><span class="line">   public void run()&#123;</span><br><span class="line">     System.out.println(&quot;run in my thread&quot;);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;).start();</span><br></pre></td></tr></table></figure>
+
+<h2 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h2><h3 id="五大状态"><a href="#五大状态" class="headerlink" title="五大状态"></a>五大状态</h3><p>当一个线程开启后，它会经过新建，就绪，运行，阻塞和死亡这五种状态。</p>
+<ol>
+<li><p>新建状态：线程刚被创建出来，此时线程并无任何动态特征。</p>
+</li>
+<li><p>就绪状态：线程可以运行。</p>
+</li>
+<li><p>运行状态：线程正在运行。</p>
+</li>
+<li><p>阻塞状态：线程处被暂停。</p>
+</li>
+<li><p>死亡状态: 线程被停止。</p>
+</li>
+</ol>
+<h3 id="线程优先级"><a href="#线程优先级" class="headerlink" title="线程优先级"></a>线程优先级</h3><p>设置和获取线程优先级的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public final void setPriority(int newPriority)</span><br><span class="line">public final int getPriority()</span><br></pre></td></tr></table></figure>
+
+<p>线程优先级的取值范围为1到10，也可以用静态变量设置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static final int MIN_PRIORITY = 1;</span><br><span class="line">public static final int NORM_PRIORITY = 5;</span><br><span class="line">public static final int MAX_PRIORITY = 10;</span><br></pre></td></tr></table></figure>
+
+<p>线程默认的优先级是父线程的优先级。Java主线程的默认优先级是NORM_PRIORITY = 5。</p>
+<h3 id="后台线程"><a href="#后台线程" class="headerlink" title="后台线程"></a>后台线程</h3><p>设置后台线程以及判断线程是否为后台线程的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public final void setDaemon(boolean on)</span><br><span class="line">public final boolean isDaemon()</span><br></pre></td></tr></table></figure>
+
+<h3 id="start-和-run"><a href="#start-和-run" class="headerlink" title="start() 和 run()"></a>start() 和 run()</h3><p>线程新建完之后，调用start()方法，使线程处于就绪状态。</p>
+<p>当就绪状态的线程获得CPU资源后，会自动执行run()方法，使线程处于运行状态。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/thread/start.png?" alt="start"></p>
+<h3 id="sleep"><a href="#sleep" class="headerlink" title="sleep()"></a>sleep()</h3><p>线程在运行状态时，调用sleep()方法，使线程处于阻塞状态。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static native void sleep(long millis) throws InterruptedException</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里Java中的native关键字，说明其修饰的方法是一个原生态方法，方法对应的实现不是在当前文件，而是在用其他语言（如C和C++）实现的文件中。Java语言本身不能对操作系统底层进行访问和操作，但是可以通过JNI接口调用其他语言来实现对底层的访问。</p>
+</blockquote>
+<p>接着我们在Activity中加入一个按钮，定义其点击方法sleep()。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class ThreadActivity extends Activity &#123;</span><br><span class="line">	public void sleep(View view) &#123;</span><br><span class="line">        SleepThread sleepThread = new SleepThread();</span><br><span class="line">        sleepThread.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	class SleepThread extends Thread &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            super.run();</span><br><span class="line">            try &#123;</span><br><span class="line">                for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">                    Log.d(&quot;Chen&quot;, &quot;Thread Sleep...&quot;);</span><br><span class="line">                    Thread.sleep(1000);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每隔一秒会输出”Thread Sleep…”，线程生命周期变化如下。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/thread/sleep.png" alt="sleep"></p>
+<h3 id="yield"><a href="#yield" class="headerlink" title="yield()"></a>yield()</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static native void yield()</span><br></pre></td></tr></table></figure>
+
+<p>这个方法通常被翻译为线程让步。顾名思义，当一个线程正在运行的时候，做出了让步，回到就绪状态，重新回到与其他线程再重新分配CPU资源。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/thread/yield.png" alt="yield"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class ThreadActivity extends Activity &#123;</span><br><span class="line">	public void yield(View view) &#123;</span><br><span class="line">        YieldThread yieldThread1 = new YieldThread(&quot;线程A&quot;);</span><br><span class="line">        YieldThread yieldThread2 = new YieldThread(&quot;线程B&quot;);</span><br><span class="line">        yieldThread1.start();</span><br><span class="line">        yieldThread2.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	class YieldThread extends Thread &#123;</span><br><span class="line">        public YieldThread(String name)&#123;</span><br><span class="line">            super(name);</span><br><span class="line">        &#125;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            super.run();</span><br><span class="line">            for (int i = 0; i &lt; 20; i++) &#123;</span><br><span class="line">                Log.d(&quot;Chen&quot;, getName() + &quot;: --&gt; &quot; + i);</span><br><span class="line">                if (i == 5) &#123;</span><br><span class="line">                    Thread.yield();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，这里的打印结果每次都不一定相同。因为线程调用过yield()后，线程调度器可能会启动其他线程，也可能继续启动该线程。</p>
+<h3 id="join"><a href="#join" class="headerlink" title="join()"></a>join()</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public final void join() throws InterruptedException</span><br><span class="line">public final synchronized void join(long millis) throws InterruptedException</span><br></pre></td></tr></table></figure>
+
+<p>这个方法需要有两个线程。比如在线程A执行体中，线程B调用join()方法。这时候线程A就会被阻塞，必须等线程B执行完或者join()的时间到了，线程A才会继续执行。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/thread/join.png" alt="join"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">public class ThreadActivity extends Activity &#123;</span><br><span class="line">	public void join(View view) &#123;</span><br><span class="line">	    new Thread(&quot;线程A&quot;) &#123;</span><br><span class="line">	        @Override</span><br><span class="line">	        public void run() &#123;</span><br><span class="line">	            super.run();</span><br><span class="line">	            try &#123;</span><br><span class="line">	                JoinThread joinThread = new JoinThread(&quot;线程B&quot;);</span><br><span class="line">	                for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">	                    if (i == 4) &#123;</span><br><span class="line">	                        joinThread.start();</span><br><span class="line">	                        joinThread.join();</span><br><span class="line">	                    &#125;</span><br><span class="line">	                    Log.d(&quot;Chen&quot;, getName() + &quot;: --&gt; &quot; + i);</span><br><span class="line">	                &#125;</span><br><span class="line">	            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">	                e.printStackTrace();</span><br><span class="line">	            &#125;</span><br><span class="line">	        &#125;</span><br><span class="line">	    &#125;.start();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	class JoinThread extends Thread &#123;</span><br><span class="line">	    public JoinThread(String name) &#123;</span><br><span class="line">	        super(name);</span><br><span class="line">	    &#125;</span><br><span class="line"></span><br><span class="line">	    @Override</span><br><span class="line">	    public void run() &#123;</span><br><span class="line">	        super.run();</span><br><span class="line">	        for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">	            Log.d(&quot;Chen&quot;, getName() + &quot;: --&gt; &quot; + i);</span><br><span class="line">	        &#125;</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果如下。可以看出，如果没有设定join的时长，线程A会先让线程B一直执行完毕后，才会继续执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">03-31 06:29:45.976 999-1130/com.chen.study E/Chen: 线程A: --&gt; 0</span><br><span class="line">03-31 06:29:45.979 999-1130/com.chen.study E/Chen: 线程A: --&gt; 1</span><br><span class="line">03-31 06:29:45.979 999-1130/com.chen.study E/Chen: 线程A: --&gt; 2</span><br><span class="line">03-31 06:29:45.979 999-1130/com.chen.study E/Chen: 线程A: --&gt; 3</span><br><span class="line">03-31 06:29:45.985 999-1131/com.chen.study E/Chen: 线程B: --&gt; 0</span><br><span class="line">03-31 06:29:45.985 999-1131/com.chen.study E/Chen: 线程B: --&gt; 1</span><br><span class="line">03-31 06:29:45.985 999-1131/com.chen.study E/Chen: 线程B: --&gt; 2</span><br><span class="line">03-31 06:29:45.985 999-1131/com.chen.study E/Chen: 线程B: --&gt; 3</span><br><span class="line">03-31 06:29:45.985 999-1131/com.chen.study E/Chen: 线程B: --&gt; 4</span><br><span class="line">03-31 06:29:45.985 999-1131/com.chen.study E/Chen: 线程B: --&gt; 5</span><br><span class="line">03-31 06:29:45.985 999-1131/com.chen.study E/Chen: 线程B: --&gt; 6</span><br><span class="line">03-31 06:29:45.985 999-1131/com.chen.study E/Chen: 线程B: --&gt; 7</span><br><span class="line">03-31 06:29:45.985 999-1131/com.chen.study E/Chen: 线程B: --&gt; 8</span><br><span class="line">03-31 06:29:45.985 999-1131/com.chen.study E/Chen: 线程B: --&gt; 9</span><br><span class="line">03-31 06:29:45.986 999-1130/com.chen.study E/Chen: 线程A: --&gt; 4</span><br><span class="line">03-31 06:29:45.986 999-1130/com.chen.study E/Chen: 线程A: --&gt; 5</span><br><span class="line">03-31 06:29:45.986 999-1130/com.chen.study E/Chen: 线程A: --&gt; 6</span><br><span class="line">03-31 06:29:45.986 999-1130/com.chen.study E/Chen: 线程A: --&gt; 7</span><br><span class="line">03-31 06:29:45.986 999-1130/com.chen.study E/Chen: 线程A: --&gt; 8</span><br><span class="line">03-31 06:29:45.986 999-1130/com.chen.study E/Chen: 线程A: --&gt; 9</span><br></pre></td></tr></table></figure>
+
+<h2 id="多线程常见知识"><a href="#多线程常见知识" class="headerlink" title="多线程常见知识"></a>多线程常见知识</h2><p>了解完线程的基本概念，接下来我们需要知道多线程里常见的一些知识。</p>
+<h3 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h3><blockquote>
+<p>同步：调用者必须要等到调用的方法返回后才会继续后续的行为。<br>异步：调用者调用后，不需等调用方法返回就可以继续后续的行为。</p>
+</blockquote>
+<p>通常单线程环境下都是同步行为，我们可以通过开启多条线程实现异步操作。</p>
+<h3 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h3><blockquote>
+<p>并发：多个任务<strong>交替运行</strong><br>并行：多个任务<strong>同时运行</strong></p>
+</blockquote>
+<p>如果只有一个CPU，系统是不可能并行执行任务，只能并发。因为CPU每次只能执行一条指令。</p>
+<h3 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h3><blockquote>
+<p>原子性：指不可分割的操作。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a = 1;</span><br><span class="line">a++;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出第一个语句是原子操作，而第二个语句包含读取、加、赋值三个操作，故不是原子操作。</p>
+<p>Java内存模型中定义了八种原子操作。</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>作用处</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>lock（锁定）</td>
+<td>主内存变量</td>
+<td>把一个变量标识成一条线程独占的状态</td>
+</tr>
+<tr>
+<td>unlock（解锁）</td>
+<td>主内存变量</td>
+<td>把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定</td>
+</tr>
+<tr>
+<td>read（读取）</td>
+<td>主内存变量</td>
+<td>把一个变量的值从主内存传输到线程的工作内存中，以便随后的 load 动作使用</td>
+</tr>
+<tr>
+<td>load（载入）</td>
+<td>工作内存变量</td>
+<td>把 read 操作得到的变量放入到工作内存的变量副本中</td>
+</tr>
+<tr>
+<td>use（使用）</td>
+<td>工作内存变量</td>
+<td>将工作内存中的一个变量的值传递给执行引擎</td>
+</tr>
+<tr>
+<td>assign（赋值）</td>
+<td>工作内存变量</td>
+<td>将执行引擎接收到的值赋给工作内存的变量</td>
+</tr>
+<tr>
+<td>store（存储）</td>
+<td>工作内存变量</td>
+<td>把工作内存中一个变量的值传给主内存中，以便给随后的 write 操作使用</td>
+</tr>
+<tr>
+<td>write（写入）</td>
+<td>主内存变量</td>
+<td>把 store 操作从工作内存中得到的变量的值放入主内存变量中</td>
+</tr>
+</tbody></table>
+<p>在这里补充介绍一下内存模型。</p>
+<p><img src="http://opzh3oodr.bkt.clouddn.com/thread/model.png" alt="Java内存模型"></p>
+<p>把一个变量从主内存中复制到工作内存中就需要执行read和load操作，将工作内存同步到主内存中就需要执行store和write操作。注意的是，java内存模型只是要求上述两个操作是顺序执行的，而并不是连续执行的。也就是说read和load之间、store和write之间可以插入其他指令。比如对主内存中的a,b进行访问可以出现这样的操作顺序：read a, read b, load b, load a。</p>
+<h3 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h3><blockquote>
+<p>可见性：指一个线程修改了共享变量的值，其他线程能够立即得知这个修改。</p>
+</blockquote>
+<p>在开发过程中，一定要多关注可见性。如果一个线程在修改共享变量，而其他线程并不知道这个修改，就会出现一些意料之外的逻辑错误。</p>
+<h3 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h3><blockquote>
+<p>有序性： 指程序的运行顺序和编写代码的顺序一致。</p>
+</blockquote>
+<p>编译器和处理器会对不具有数据依赖性的操作进行重排序，来提升运行速度。</p>
+<p>而数据依赖性只会在单线程中出现。所以，仅观察单一线程，所有操作都是有序的，但多个线程之间的操作，很可能被重排序了。</p>
+<p>这个特性也需要我们在处理多线程问题时多加关注。</p>
+<h2 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h2><p>掌握上面的多线程知识，再来理解线程安全就非常容易了。这里我们用经典的多窗口案例来讲。</p>
+<h3 id="产生案例"><a href="#产生案例" class="headerlink" title="产生案例"></a>产生案例</h3><p>假设一共有10张票，现在一共有两个窗口在卖。这里票就是共享变量，而窗口就是线程。我们可以很容易地写出下面的代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line"></span><br><span class="line">    private int ticketNum = 30;</span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void sell(View view) &#123;</span><br><span class="line">        SellThread sellThread1 = new SellThread(&quot;窗口A&quot;);</span><br><span class="line">        SellThread sellThread2 = new SellThread(&quot;窗口B&quot;);</span><br><span class="line">        sellThread1.start();</span><br><span class="line">        sellThread2.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class SellThread extends Thread &#123;</span><br><span class="line">        public SellThread(String name) &#123;</span><br><span class="line">            super(name);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            super.run();</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                if (ticketNum &lt;= 0) &#123;</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line">                Log.d(&quot;Chen&quot;, getName() + &quot; 卖出第 &quot; + ticketNum + &quot; 张票，剩余的票数：&quot; + --ticketNum);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们启动两个线程不停循环卖票，每次卖出一张，总票数就减少一张。如果总票数为0，就停止循环。运行结果如下（实际每次运行结果会不一样）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">03-31 09:51:42.669 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 30 张票，剩余的票数：29</span><br><span class="line">03-31 09:51:42.669 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 29 张票，剩余的票数：28</span><br><span class="line">03-31 09:51:42.669 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 28 张票，剩余的票数：27</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 27 张票，剩余的票数：26</span><br><span class="line">03-31 09:51:42.670 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 26 张票，剩余的票数：25</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 25 张票，剩余的票数：24</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 24 张票，剩余的票数：23</span><br><span class="line">03-31 09:51:42.670 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 24 张票，剩余的票数：22</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 22 张票，剩余的票数：21</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 21 张票，剩余的票数：20</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 20 张票，剩余的票数：19</span><br><span class="line">03-31 09:51:42.670 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 20 张票，剩余的票数：18</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 18 张票，剩余的票数：17</span><br><span class="line">03-31 09:51:42.670 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 17 张票，剩余的票数：16</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 16 张票，剩余的票数：15</span><br><span class="line">03-31 09:51:42.670 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 15 张票，剩余的票数：14</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 14 张票，剩余的票数：13</span><br><span class="line">03-31 09:51:42.670 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 13 张票，剩余的票数：12</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 12 张票，剩余的票数：11</span><br><span class="line">03-31 09:51:42.670 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 11 张票，剩余的票数：10</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 10 张票，剩余的票数：9</span><br><span class="line">03-31 09:51:42.670 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 9 张票，剩余的票数：8</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 8 张票，剩余的票数：7</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 7 张票，剩余的票数：6</span><br><span class="line">03-31 09:51:42.670 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 6 张票，剩余的票数：5</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 5 张票，剩余的票数：4</span><br><span class="line">03-31 09:51:42.670 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 4 张票，剩余的票数：3</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 3 张票，剩余的票数：2</span><br><span class="line">03-31 09:51:42.670 19836-20275/com.chen.study D/Chen: 窗口B 卖出第 2 张票，剩余的票数：1</span><br><span class="line">03-31 09:51:42.670 19836-20274/com.chen.study D/Chen: 窗口A 卖出第 1 张票，剩余的票数：0</span><br></pre></td></tr></table></figure>
+
+<p>可是我们看到，窗口A和窗口B同时都卖出了第24张和第20张票，这并不符合实际情况。而这个产生的原因就是线程不安全。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>我们可以用synchronized代码块来解决这个线程不安全的问题。</p>
+<p>修改上面代码的run()方法，添加synchronized包裹代码块。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public void run() &#123;</span><br><span class="line">    super.run();</span><br><span class="line">    while (true) &#123;</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            if (ticketNum &lt;= 0) &#123;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            Log.d(&quot;Chen&quot;, getName() + &quot; 卖出第 &quot; + ticketNum + &quot; 张票，剩余的票数：&quot; + --ticketNum);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果如下，这次就跟我们预期一样了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">03-31 10:05:27.282 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 30 张票，剩余的票数：29</span><br><span class="line">03-31 10:05:27.283 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 29 张票，剩余的票数：28</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 28 张票，剩余的票数：27</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 27 张票，剩余的票数：26</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 26 张票，剩余的票数：25</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 25 张票，剩余的票数：24</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 24 张票，剩余的票数：23</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 23 张票，剩余的票数：22</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 22 张票，剩余的票数：21</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 21 张票，剩余的票数：20</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 20 张票，剩余的票数：19</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 19 张票，剩余的票数：18</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 18 张票，剩余的票数：17</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 17 张票，剩余的票数：16</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 16 张票，剩余的票数：15</span><br><span class="line">03-31 10:05:27.284 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 15 张票，剩余的票数：14</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 14 张票，剩余的票数：13</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 13 张票，剩余的票数：12</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 12 张票，剩余的票数：11</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 11 张票，剩余的票数：10</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 10 张票，剩余的票数：9</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 9 张票，剩余的票数：8</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 8 张票，剩余的票数：7</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 7 张票，剩余的票数：6</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 6 张票，剩余的票数：5</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 5 张票，剩余的票数：4</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 4 张票，剩余的票数：3</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 3 张票，剩余的票数：2</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 2 张票，剩余的票数：1</span><br><span class="line">03-31 10:05:27.285 29787-32670/com.chen.study D/Chen: 窗口A 卖出第 1 张票，剩余的票数：0</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>好了，关于多线程的一些相关概念知识就梳理到这了。相信会对我们在多线程编程时遇到的一些诡异问题的解决有所帮助。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://MiraleChen001.github.io/2018/03/27/Java多线程必知概念/" data-id="cjwlstn5z001ut0vjvr6a562u" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程/">线程</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/10/设计模式系列开篇：六大原则/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          设计模式系列开篇：六大原则
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/18/谈谈Android中的线程池/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">关于Android中的线程池</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android-基础/">Android 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Android-实战/">Android 实战</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/博客搭建/">博客搭建</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/多线程/">多线程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Activity/">Activity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/事件拦截/">事件拦截</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/六大原则/">六大原则</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/加密/">加密</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单例模式/">单例模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/回调/">回调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工厂方法模式/">工厂方法模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/建造者模式/">建造者模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/抽象工厂模式/">抽象工厂模式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/摇晃截图/">摇晃截图</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程/">线程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/虚拟机/">虚拟机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/退出/">退出</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/邮件/">邮件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Activity/" style="font-size: 10px;">Activity</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/事件拦截/" style="font-size: 10px;">事件拦截</a> <a href="/tags/六大原则/" style="font-size: 10px;">六大原则</a> <a href="/tags/加密/" style="font-size: 10px;">加密</a> <a href="/tags/单例模式/" style="font-size: 10px;">单例模式</a> <a href="/tags/回调/" style="font-size: 10px;">回调</a> <a href="/tags/工厂方法模式/" style="font-size: 10px;">工厂方法模式</a> <a href="/tags/建造者模式/" style="font-size: 10px;">建造者模式</a> <a href="/tags/抽象工厂模式/" style="font-size: 20px;">抽象工厂模式</a> <a href="/tags/摇晃截图/" style="font-size: 10px;">摇晃截图</a> <a href="/tags/线程/" style="font-size: 10px;">线程</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/虚拟机/" style="font-size: 10px;">虚拟机</a> <a href="/tags/退出/" style="font-size: 10px;">退出</a> <a href="/tags/邮件/" style="font-size: 10px;">邮件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/29/Android实现手机摇晃截图/">Android实现手机摇晃截图</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/26/在Android项目中集成发送邮件功能/">在Android项目中集成发送邮件功能</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/23/设计模式系列（五）：建造者模式/">设计模式系列（五）：建造者模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（四）：模板方法模式/">设计模式系列（四）：模板方法模式</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/设计模式系列（三）：抽象工厂模式/">设计模式系列（三）：抽象工厂模式</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
